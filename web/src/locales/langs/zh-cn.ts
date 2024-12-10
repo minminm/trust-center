@@ -10,6 +10,7 @@ const local: App.I18n.Schema = {
     action: '操作',
     add: '新增',
     addSuccess: '添加成功',
+    addFailed: '添加失败',
     backToHome: '返回首页',
     batchDelete: '批量删除',
     cancel: '取消',
@@ -21,6 +22,7 @@ const local: App.I18n.Schema = {
     confirm: '确认',
     delete: '删除',
     deleteSuccess: '删除成功',
+    deleteFailed: '删除失败',
     confirmDelete: '确认删除吗？',
     edit: '编辑',
     warning: '警告',
@@ -43,6 +45,7 @@ const local: App.I18n.Schema = {
     trigger: '触发',
     update: '更新',
     updateSuccess: '更新成功',
+    updateFailed: '更新失败',
     userCenter: '个人中心',
     yesOrNo: {
       yes: '是',
@@ -360,13 +363,15 @@ const local: App.I18n.Schema = {
         roleCode: '角色编码',
         roleStatus: '角色状态',
         roleDesc: '角色描述',
+        rolePermission: '角色权限',
         menuAuth: '菜单权限',
         buttonAuth: '按钮权限',
         form: {
           roleName: '请输入角色名称',
           roleCode: '请输入角色编码',
           roleStatus: '请选择角色状态',
-          roleDesc: '请输入角色描述'
+          roleDesc: '请输入角色描述',
+          rolePerm: '请选择角色权限'
         },
         addRole: '新增角色',
         editRole: '编辑角色'

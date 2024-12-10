@@ -1,9 +1,14 @@
 from datetime import datetime
+from token import OP
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from app.schemas.common import PaginaingCommonParams, PaginaingResopnseParams
+from app.schemas.common import (
+    PaginaingCommonParams,
+    PaginaingResopnseParams,
+    CommonRecord,
+)
 
 
 class UserSearchParams(PaginaingCommonParams):
@@ -12,18 +17,40 @@ class UserSearchParams(PaginaingCommonParams):
     gender: Optional[int] = Field(default=None, alias="userGender")
     status: Optional[int] = None
     email: Optional[str] = Field(default=None, alias="userEmail")
+    roles: Optional[list[str]] = Field(default=None, alias="userRoles")
 
 
-class UserInfo(BaseModel):
-    id: int
-    name: str = Field(serialization_alias="userName")
+class UserInfo(CommonRecord):
+    username: str = Field(serialization_alias="userName")
     nickname: str = Field(serialization_alias="nickName")
-    gender: int = Field(serialization_alias="userGender")
-    status: int
+    gender: Optional[int] = Field(default=0, serialization_alias="userGender")
     email: Optional[str] = Field(default=None, serialization_alias="userEmail")
     roles: list[str] = Field(serialization_alias="userRoles")
-    create_at: datetime = Field(serialization_alias="createTime")
-    update_at: Optional[datetime] = Field(serialization_alias="updateTime")
     logout_at: Optional[datetime] = Field(serialization_alias="logoutTime")
-    create_by: Optional[int] = Field(serialization_alias="createBy")
-    update_by: Optional[int] = Field(serialization_alias="updateBy")
+
+
+class UserUpdateModel(BaseModel):
+    id: int
+    status: int
+    username: Optional[str] = Field(default=None, alias="userName")
+    nickname: Optional[str] = Field(default=None, alias="nickName")
+    gender: Optional[int] = Field(default=1, alias="userGender")
+    email: Optional[str] = Field(default=None, alias="userEmail")
+    roles: list[str] = Field(alias="userRoles")
+
+
+class UserInsertModel(BaseModel):
+    status: int
+    username: str = Field(alias="userName")
+    nickname: Optional[str] = Field(default=None, alias="nickName")
+    gender: Optional[int] = Field(default=1, alias="userGender")
+    email: Optional[str] = Field(default=None, alias="userEmail")
+    roles: list[str] = Field(alias="userRoles")
+
+
+class UserDeleteParams(BaseModel):
+    id: int
+
+
+class UserBatchDeleteParams(BaseModel):
+    ids: list[int]

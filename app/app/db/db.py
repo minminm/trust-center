@@ -64,7 +64,7 @@ def mock_role(db: SQLAlchemy):
     db.session.query(Role).delete()
     roles = [
         Role(
-            id=1,
+            # id=1,
             name="超级管理员",
             code="SUPER",
             description="超级管理员，拥有所有权限",
@@ -72,7 +72,7 @@ def mock_role(db: SQLAlchemy):
             menu_ids=[],
         ),
         Role(
-            id=2,
+            # id=2,
             name="管理员",
             code="ADMIN",
             description="管理员，拥有查看和添加权限",
@@ -80,7 +80,7 @@ def mock_role(db: SQLAlchemy):
             menu_ids=[],
         ),
         Role(
-            id=3,
+            # id=3,
             name="普通用户",
             code="USER",
             description="普通用户，拥有查看权限",

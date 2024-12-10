@@ -1,7 +1,8 @@
+<!-- eslint-disable no-warning-comments -->
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { fetchGetAllRoles } from '@/service/api';
+import { addUser, updateUser } from '@/service/api';
 import { $t } from '@/locales';
 import { enableStatusOptions, userGenderOptions } from '@/constants/business';
 
@@ -14,6 +15,8 @@ interface Props {
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
   rowData?: Api.SystemManage.User | null;
+  /** all roles */
+  allRoles: Api.SystemManage.AllRole[];
 }
 
 const props = defineProps<Props>();
@@ -39,12 +42,9 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-type Model = Pick<
-  Api.SystemManage.User,
-  'userName' | 'userGender' | 'nickName' | 'userPasswd' | 'userEmail' | 'userRoles' | 'status'
->;
-
 const model = ref(createDefaultModel());
+
+type Model = Api.SystemManage.UserModel;
 
 function createDefaultModel(): Model {
   return {
@@ -68,25 +68,20 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 /** the enabled role options */
 const roleOptions = ref<CommonType.Option<string>[]>([]);
 
-async function getRoleOptions() {
-  const { error, data } = await fetchGetAllRoles();
+function getRoleOptions() {
+  const options = props.allRoles.map(item => ({
+    label: item.roleName,
+    value: item.roleName
+  }));
 
-  if (!error) {
-    const options = data.map(item => ({
-      label: item.roleName,
-      value: item.roleCode
-    }));
+  const userRoleOptions = model.value.userRoles.map(item => ({
+    label: item,
+    value: item
+  }));
 
-    // the mock data does not have the roleCode, so fill it
-    // if the real request, remove the following code
-    const userRoleOptions = model.value.userRoles.map(item => ({
-      label: item,
-      value: item
-    }));
-    // end
+  const filteredOptions = options.filter(option => !userRoleOptions.some(userRole => userRole.value === option.value));
 
-    roleOptions.value = [...userRoleOptions, ...options];
-  }
+  roleOptions.value = [...userRoleOptions, ...filteredOptions];
 }
 
 function handleInitModel() {
@@ -103,10 +98,20 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+
+  const submitMethod = props.operateType === 'edit' ? updateUser : addUser;
+  const successI18nKey = props.operateType === 'edit' ? 'common.updateSuccess' : 'common.addSuccess';
+  const failedI18nKey = props.operateType === 'edit' ? 'common.updateFailed' : 'common.addFailed';
+
+  const { error } = await submitMethod(model.value);
+
+  if (!error) {
+    window.$message?.success($t(successI18nKey));
+    closeDrawer();
+    emit('submitted');
+  } else {
+    window.$message?.error($t(failedI18nKey));
+  }
 }
 
 watch(visible, () => {
@@ -150,7 +155,9 @@ watch(visible, () => {
       <template #footer>
         <NSpace :size="16">
           <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
-          <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
+          <NButton type="primary" :loading="formRef?.validate?.() === undefined" @click="handleSubmit">
+            {{ $t('common.confirm') }}
+          </NButton>
         </NSpace>
       </template>
     </NDrawerContent>

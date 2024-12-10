@@ -1,10 +1,26 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { $t } from '@/locales';
 import { enableStatusOptions } from '@/constants/business';
 import { translateOptions } from '@/utils/common';
 
 defineOptions({
   name: 'RoleSearch'
+});
+
+interface Props {
+  /** all perms */
+  allPerms: Api.SystemManage.AllPerm[];
+}
+
+const props = defineProps<Props>();
+
+/** the enabled permission options */
+const permOptions = computed<CommonType.Option<string>[]>(() => {
+  return props.allPerms.map(item => ({
+    label: item.permName,
+    value: item.permName
+  }));
 });
 
 interface Emits {
@@ -36,6 +52,14 @@ function search() {
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleCode')" path="roleCode" class="pr-24px">
               <NInput v-model:value="model.roleCode" :placeholder="$t('page.manage.role.form.roleCode')" />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.rolePermission')" path="perms" class="pr-24px">
+              <NSelect
+                v-model:value="model.rolePerms"
+                multiple
+                :options="permOptions"
+                :placeholder="$t('page.manage.role.form.rolePerm')"
+              />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleStatus')" path="status" class="pr-24px">
               <NSelect

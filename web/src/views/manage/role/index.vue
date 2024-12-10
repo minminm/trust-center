@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchGetRoleList } from '@/service/api';
+import { onMounted, ref } from 'vue';
+import { batchDeleteRole, deleteRole, fetchGetAllPerms, fetchGetRoleList } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -59,6 +60,23 @@ const {
       key: 'roleDesc',
       title: $t('page.manage.role.roleDesc'),
       minWidth: 120
+    },
+    {
+      key: 'rolePerms', // New column for role permissions
+      title: $t('page.manage.role.rolePermission'),
+      align: 'center',
+      minWidth: 150,
+      render: row => {
+        return (
+          <div class="flex flex-wrap justify-center gap-8px">
+            {row.rolePerms.map(perm => (
+              <NTag type="info" size="small">
+                {perm}
+              </NTag>
+            ))}
+          </div>
+        );
+      }
     },
     {
       key: 'status',
@@ -120,26 +138,42 @@ const {
 
 async function handleBatchDelete() {
   // request
-  console.log(checkedRowKeys.value);
+  const ids = checkedRowKeys.value.map(key => Number(key));
 
-  onBatchDeleted();
+  console.log('in batch delete role', ids);
+
+  onBatchDeleted(batchDeleteRole, ids);
 }
 
 function handleDelete(id: number) {
   // request
   console.log(id);
 
-  onDeleted();
+  onDeleted(deleteRole, id);
 }
 
 function edit(id: number) {
   handleEdit(id);
 }
+
+const allPerms = ref<Api.SystemManage.AllPerm[]>([]);
+
+onMounted(async () => {
+  /** 每次挂载前都获取 perms 传入子组件; 用于新增/编辑/过滤时展示 perms */
+
+  const { error, data: fetchedData } = await fetchGetAllPerms();
+
+  console.log(fetchedData);
+
+  if (!error) {
+    allPerms.value = fetchedData;
+  }
+});
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <RoleSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <RoleSearch v-model:model="searchParams" :all-perms="allPerms" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard :title="$t('page.manage.role.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
@@ -167,6 +201,7 @@ function edit(id: number) {
       <RoleOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
+        :all-perms="allPerms"
         :row-data="editingData"
         @submitted="getDataByPage"
       />

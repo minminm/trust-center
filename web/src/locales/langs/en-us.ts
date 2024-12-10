@@ -10,6 +10,7 @@ const local: App.I18n.Schema = {
     action: 'Action',
     add: 'Add',
     addSuccess: 'Add Success',
+    addFailed: 'Add Failed',
     backToHome: 'Back to home',
     batchDelete: 'Batch Delete',
     cancel: 'Cancel',
@@ -21,6 +22,7 @@ const local: App.I18n.Schema = {
     confirm: 'Confirm',
     delete: 'Delete',
     deleteSuccess: 'Delete Success',
+    deleteFailed: 'Delete Failed',
     confirmDelete: 'Are you sure you want to delete?',
     edit: 'Edit',
     warning: 'Warning',
@@ -43,6 +45,7 @@ const local: App.I18n.Schema = {
     trigger: 'Trigger',
     update: 'Update',
     updateSuccess: 'Update Success',
+    updateFailed: 'Update Failed',
     userCenter: 'User Center',
     yesOrNo: {
       yes: 'Yes',
@@ -360,13 +363,15 @@ const local: App.I18n.Schema = {
         roleCode: 'Role Code',
         roleStatus: 'Role Status',
         roleDesc: 'Role Description',
+        rolePermission: 'Role Permission',
         menuAuth: 'Menu Auth',
         buttonAuth: 'Button Auth',
         form: {
           roleName: 'Please enter role name',
           roleCode: 'Please enter role code',
           roleStatus: 'Please select role status',
-          roleDesc: 'Please enter role description'
+          roleDesc: 'Please enter role description',
+          rolePerm: 'Please select role permission'
         },
         addRole: 'Add Role',
         editRole: 'Edit Role'

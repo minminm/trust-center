@@ -36,6 +36,6 @@ def test():
     from extension import db
 
     data = User(username="test", nickname="TEST", password="sss")
-    db.session.add(data)
+    db.session.add_all([data for _ in range(10)])
     db.session.commit()
     return success(msg="Success")

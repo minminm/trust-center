@@ -4,6 +4,7 @@ import { useBoolean } from '@sa/hooks';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { enableStatusOptions } from '@/constants/business';
+import { addRole, updateRole } from '@/service/api';
 import MenuAuthModal from './menu-auth-modal.vue';
 import ButtonAuthModal from './button-auth-modal.vue';
 
@@ -16,6 +17,8 @@ interface Props {
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
   rowData?: Api.SystemManage.Role | null;
+  /** all permissions */
+  allPerms: Api.SystemManage.AllPerm[];
 }
 
 const props = defineProps<Props>();
@@ -43,7 +46,7 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-type Model = Pick<Api.SystemManage.Role, 'roleName' | 'roleCode' | 'roleDesc' | 'status'>;
+type Model = Api.SystemManage.RoleModel;
 
 const model = ref(createDefaultModel());
 
@@ -52,17 +55,37 @@ function createDefaultModel(): Model {
     roleName: '',
     roleCode: '',
     roleDesc: '',
+    rolePerms: [],
     status: null
   };
 }
 
-type RuleKey = Exclude<keyof Model, 'roleDesc'>;
+type RuleKey = Extract<keyof Model, 'roleName' | 'roleCode' | 'status'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   roleName: defaultRequiredRule,
   roleCode: defaultRequiredRule,
   status: defaultRequiredRule
 };
+
+/** the enabled permission options */
+const permOptions = ref<CommonType.Option<string>[]>([]);
+
+function getPermOptions() {
+  const options = props.allPerms.map(item => ({
+    label: item.permName,
+    value: item.permName
+  }));
+
+  const rolePermOptions = model.value.rolePerms.map(item => ({
+    label: item,
+    value: item
+  }));
+
+  const filteredOptions = options.filter(option => !rolePermOptions.some(rolePerm => rolePerm.value === option.value));
+
+  permOptions.value = [...rolePermOptions, ...filteredOptions];
+}
 
 const roleId = computed(() => props.rowData?.id || -1);
 
@@ -82,16 +105,27 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+
+  const submitMethod = props.operateType === 'edit' ? updateRole : addRole;
+  const successI18nKey = props.operateType === 'edit' ? 'common.updateSuccess' : 'common.addSuccess';
+  const failedI18nKey = props.operateType === 'edit' ? 'common.updateFailed' : 'common.addFailed';
+
+  const { error } = await submitMethod(model.value);
+
+  if (!error) {
+    window.$message?.success($t(successI18nKey));
+    closeDrawer();
+    emit('submitted');
+  } else {
+    window.$message?.error($t(failedI18nKey));
+  }
 }
 
 watch(visible, () => {
   if (visible.value) {
     handleInitModel();
     restoreValidation();
+    getPermOptions();
   }
 });
 </script>
@@ -110,6 +144,14 @@ watch(visible, () => {
           <NRadioGroup v-model:value="model.status">
             <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
           </NRadioGroup>
+        </NFormItem>
+        <NFormItem :label="$t('page.manage.user.userRole')" path="perms">
+          <NSelect
+            v-model:value="model.rolePerms"
+            multiple
+            :options="permOptions"
+            :placeholder="$t('page.manage.role.form.rolePerm')"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.manage.role.roleDesc')" path="roleDesc">
           <NInput v-model:value="model.roleDesc" :placeholder="$t('page.manage.role.form.roleDesc')" />

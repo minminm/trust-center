@@ -93,6 +93,27 @@ declare namespace Api {
   namespace SystemManage {
     type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
 
+    /** permission */
+    type Permission = Common.CommonRecord<{
+      /** permission name */
+      permName: string;
+      /** permission code */
+      permCode: string;
+      /** permission description */
+      permDesc: string;
+    }>;
+
+    /** permission search params */
+    type PermSearchParams = CommonType.RecordNullable<
+      Pick<Api.SystemManage.Permission, 'permName' | 'permCode' | 'permDesc'> & CommonSearchParams
+    >;
+
+    /** role list */
+    type PermList = Common.PaginatingQueryRecord<Permission>;
+
+    /** all role */
+    type AllPerm = Pick<Permission, 'id' | 'permName' | 'permCode'>;
+
     /** role */
     type Role = Common.CommonRecord<{
       /** role name */
@@ -101,11 +122,15 @@ declare namespace Api {
       roleCode: string;
       /** role description */
       roleDesc: string;
+      /** role permissions */
+      rolePerms: string[];
     }>;
+
+    type RoleModel = Pick<Api.SystemManage.Role, 'roleName' | 'roleCode' | 'roleDesc' | 'status' | 'rolePerms'>;
 
     /** role search params */
     type RoleSearchParams = CommonType.RecordNullable<
-      Pick<Api.SystemManage.Role, 'roleName' | 'roleCode' | 'status'> & CommonSearchParams
+      Pick<Api.SystemManage.Role, 'roleName' | 'roleCode' | 'status' | 'rolePerms'> & CommonSearchParams
     >;
 
     /** role list */
@@ -139,9 +164,15 @@ declare namespace Api {
       userRoles: string[];
     }>;
 
+    type UserModel = Pick<
+      Api.SystemManage.User,
+      'userName' | 'userGender' | 'nickName' | 'userPasswd' | 'userEmail' | 'userRoles' | 'status'
+    >;
+
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
-      Pick<Api.SystemManage.User, 'userName' | 'userGender' | 'nickName' | 'userEmail' | 'status'> & CommonSearchParams
+      Pick<Api.SystemManage.User, 'userName' | 'userGender' | 'nickName' | 'userEmail' | 'status' | 'userRoles'> &
+        CommonSearchParams
     >;
 
     /** user list */

@@ -237,19 +237,27 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
   const checkedRowKeys = ref<string[]>([]);
 
   /** the hook after the batch delete operation is completed */
-  async function onBatchDeleted() {
-    window.$message?.success($t('common.deleteSuccess'));
+  async function onBatchDeleted(deleteFunction: (ids: number[]) => Promise<any>, ids: number[]) {
+    const { error } = await deleteFunction(ids);
 
-    checkedRowKeys.value = [];
-
-    await getData();
+    if (!error) {
+      window.$message?.success($t('common.deleteSuccess'));
+      await getData();
+    } else {
+      window.$message?.error($t('common.deleteSuccess'));
+    }
   }
 
   /** the hook after the delete operation is completed */
-  async function onDeleted() {
-    window.$message?.success($t('common.deleteSuccess'));
+  async function onDeleted(deleteFunction: (id: number) => Promise<any>, id: number) {
+    const { error } = await deleteFunction(id);
 
-    await getData();
+    if (!error) {
+      window.$message?.success($t('common.deleteSuccess'));
+      await getData();
+    } else {
+      window.$message?.error($t('common.deleteSuccess'));
+    }
   }
 
   return {

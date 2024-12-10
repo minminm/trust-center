@@ -14,7 +14,7 @@ class User(db.Model):
     username = Column(String(255), comment="用户名")
     nickname = Column(String(255), comment="用户昵称")
     password = Column(String(255), comment="密码")
-    gender = Column(SmallInteger, comment="性别, 1: 男, 2: 女")
+    gender = Column(SmallInteger, default=1, comment="性别, 1: 男, 2: 女")
     email = Column(String(255), comment="邮箱")
     role_ids = Column(ARRAY(Integer), default=[], comment="用户角色ID列表")
     deleted = Column(SmallInteger, default=1, comment="状态, 1: 启用, 2: 禁用")

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { NFormItemGi } from 'naive-ui';
+import { computed } from 'vue';
 import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
 import { enableStatusOptions, userGenderOptions } from '@/constants/business';
@@ -6,6 +8,21 @@ import { translateOptions } from '@/utils/common';
 
 defineOptions({
   name: 'UserSearch'
+});
+
+interface Props {
+  /** all roles */
+  allRoles: Api.SystemManage.AllRole[];
+}
+
+const props = defineProps<Props>();
+
+/** the enabled role options */
+const roleOptions = computed<CommonType.Option<string>[]>(() => {
+  return props.allRoles.map(item => ({
+    label: item.roleName,
+    value: item.roleName
+  }));
 });
 
 interface Emits {
@@ -70,6 +87,14 @@ async function search() {
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.user.userEmail')" path="userEmail" class="pr-24px">
               <NInput v-model:value="model.userEmail" :placeholder="$t('page.manage.user.form.userEmail')" />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.user.userRole')" path="roles" class="pr-24px">
+              <NSelect
+                v-model:value="model.userRoles"
+                multiple
+                :options="roleOptions"
+                :placeholder="$t('page.manage.user.form.userRole')"
+              />
             </NFormItemGi>
             <NFormItemGi span="24 m:12" class="pr-24px">
               <NSpace class="w-full" justify="end">

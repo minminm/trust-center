@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchGetUserList } from '@/service/api';
+import { onMounted, ref } from 'vue';
+import { batchDeleteUser, deleteUser, fetchGetAllRoles, fetchGetUserList } from '@/service/api';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
@@ -85,6 +86,23 @@ const {
       minWidth: 200
     },
     {
+      key: 'userRoles', // New column for user roles
+      title: $t('page.manage.user.userRole'),
+      align: 'center',
+      minWidth: 150,
+      render: row => {
+        return (
+          <div class="flex flex-wrap justify-center gap-8px">
+            {row.userRoles.map(role => (
+              <NTag type="info" size="small">
+                {role}
+              </NTag>
+            ))}
+          </div>
+        );
+      }
+    },
+    {
       key: 'status',
       title: $t('page.manage.user.userStatus'),
       align: 'center',
@@ -98,8 +116,6 @@ const {
           1: 'success',
           2: 'warning'
         };
-
-        console.log(row);
 
         const label = $t(enableStatusRecord[row.status]);
 
@@ -146,26 +162,39 @@ const {
 
 async function handleBatchDelete() {
   // request
-  console.log(checkedRowKeys.value);
 
-  onBatchDeleted();
+  const ids = checkedRowKeys.value.map(key => Number(key));
+
+  onBatchDeleted(batchDeleteUser, ids);
 }
 
-function handleDelete(id: number) {
+async function handleDelete(id: number) {
   // request
-  console.log(id);
+  console.log('user page handle delete', id);
 
-  onDeleted();
+  onDeleted(deleteUser, id);
 }
 
 function edit(id: number) {
   handleEdit(id);
 }
+
+const allRoles = ref<Api.SystemManage.AllRole[]>([]);
+
+onMounted(async () => {
+  /** 每次挂载前都获取 roles 传入子组件; 用于新增/编辑/过滤时展示 roles */
+
+  const { error, data: fetchedData } = await fetchGetAllRoles();
+
+  if (!error) {
+    allRoles.value = fetchedData;
+  }
+});
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <UserSearch v-model:model="searchParams" :all-roles="allRoles" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard :title="$t('page.manage.user.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
@@ -193,6 +222,7 @@ function edit(id: number) {
       <UserOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
+        :all-roles="allRoles"
         :row-data="editingData"
         @submitted="getDataByPage"
       />
