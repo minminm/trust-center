@@ -199,6 +199,7 @@ const routeMap: RouteMap = {
   "login": "/login/:module(pwd-login)?",
   "manage": "/manage",
   "manage_menu": "/manage/menu",
+  "manage_permission": "/manage/permission",
   "manage_role": "/manage/role",
   "manage_user": "/manage/user",
   "manage_user-detail": "/manage/user-detail/:id",
@@ -232,6 +233,8 @@ const routeMap: RouteMap = {
   "plugin_tables_vtable": "/plugin/tables/vtable",
   "plugin_typeit": "/plugin/typeit",
   "plugin_video": "/plugin/video",
+  "trust-manage": "/trust-manage",
+  "trust-manage_monitor": "/trust-manage/monitor",
   "user-center": "/user-center"
 };
 

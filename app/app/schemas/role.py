@@ -10,6 +10,8 @@ from pydantic import BaseModel, Field
 class RoleSearchParams(PaginaingCommonParams):
     name: Optional[str] = Field(default=None, alias="roleName")
     code: Optional[str] = Field(default=None, alias="roleCode")
+    desc: Optional[str] = Field(default=None, alias="roleDesc")
+    status: Optional[int] = None
     perms: Optional[list[str]] = Field(default=None, alias="rolePerms")
 
 

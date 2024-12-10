@@ -530,6 +530,21 @@ declare namespace App {
               disable: string;
             };
           };
+          permission: {
+            title: string;
+            permName: string;
+            permCode: string;
+            permStatus: string;
+            permDesc: string;
+            form: {
+              permName: string;
+              permCode: string;
+              permStatus: string;
+              permDesc: string;
+            };
+            addPerm: string;
+            editPerm: string;
+          };
           role: {
             title: string;
             roleName: string;

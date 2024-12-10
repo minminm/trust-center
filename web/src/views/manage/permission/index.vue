@@ -1,13 +1,12 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { onMounted, ref } from 'vue';
-import { batchDeleteUser, deleteUser, fetchGetAllRoles, fetchGetUserList } from '@/service/api';
-import { $t } from '@/locales';
+import { batchDeletePermission, deletePermission, fetchGetPermList } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
-import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import UserOperateDrawer from './modules/user-operate-drawer.vue';
-import UserSearch from './modules/user-search.vue';
+import { $t } from '@/locales';
+import { enableStatusRecord } from '@/constants/business';
+import PermissionOperateDrawer from './modules/permission-operate-drawer.vue';
+import PermissionSearch from './modules/permission-search.vue';
 
 const appStore = useAppStore();
 
@@ -15,26 +14,23 @@ const {
   columns,
   columnChecks,
   data,
+  loading,
   getData,
   getDataByPage,
-  loading,
   mobilePagination,
   searchParams,
   resetSearchParams
 } = useTable({
-  apiFn: fetchGetUserList,
-  showTotal: true,
+  apiFn: fetchGetPermList,
   apiParams: {
     current: 1,
     size: 10,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
     status: null,
-    userName: null,
-    userGender: null,
-    nickName: null,
-    userEmail: null,
-    userRoles: null
+    permName: null,
+    permCode: null,
+    permDesc: null
   },
   columns: () => [
     {
@@ -45,67 +41,29 @@ const {
     {
       key: 'index',
       title: $t('common.index'),
-      align: 'center',
-      width: 64
+      width: 64,
+      align: 'center'
     },
     {
-      key: 'userName',
-      title: $t('page.manage.user.userName'),
+      key: 'permName',
+      title: $t('page.manage.permission.permName'),
       align: 'center',
-      minWidth: 100
+      minWidth: 120
     },
     {
-      key: 'userGender',
-      title: $t('page.manage.user.userGender'),
+      key: 'permCode',
+      title: $t('page.manage.permission.permCode'),
       align: 'center',
-      width: 100,
-      render: row => {
-        if (row.userGender === null) {
-          return null;
-        }
-
-        const tagMap: Record<Api.SystemManage.UserGender, NaiveUI.ThemeColor> = {
-          1: 'primary',
-          2: 'error'
-        };
-
-        const label = $t(userGenderRecord[row.userGender]);
-
-        return <NTag type={tagMap[row.userGender]}>{label}</NTag>;
-      }
+      minWidth: 120
     },
     {
-      key: 'nickName',
-      title: $t('page.manage.user.nickName'),
-      align: 'center',
-      minWidth: 100
-    },
-    {
-      key: 'userEmail',
-      title: $t('page.manage.user.userEmail'),
-      align: 'center',
-      minWidth: 200
-    },
-    {
-      key: 'userRoles', // New column for user roles
-      title: $t('page.manage.user.userRole'),
-      align: 'center',
-      minWidth: 150,
-      render: row => {
-        return (
-          <div class="flex flex-wrap justify-center gap-8px">
-            {row.userRoles.map(role => (
-              <NTag type="info" size="small">
-                {role}
-              </NTag>
-            ))}
-          </div>
-        );
-      }
+      key: 'permDesc',
+      title: $t('page.manage.permission.permDesc'),
+      minWidth: 120
     },
     {
       key: 'status',
-      title: $t('page.manage.user.userStatus'),
+      title: $t('page.manage.permission.permStatus'),
       align: 'center',
       width: 100,
       render: row => {
@@ -163,40 +121,34 @@ const {
 
 async function handleBatchDelete() {
   // request
-
   const ids = checkedRowKeys.value.map(key => Number(key));
 
-  onBatchDeleted(batchDeleteUser, ids);
+  console.log('in batch delete permission', ids);
+
+  onBatchDeleted(batchDeletePermission, ids);
 }
 
-async function handleDelete(id: number) {
+function handleDelete(id: number) {
   // request
-  console.log('user page handle delete', id);
+  console.log(id);
 
-  onDeleted(deleteUser, id);
+  onDeleted(deletePermission, id);
 }
 
 function edit(id: number) {
   handleEdit(id);
 }
-
-const allRoles = ref<Api.SystemManage.AllRole[]>([]);
-
-onMounted(async () => {
-  /** 每次挂载前都获取 roles 传入子组件; 用于新增/编辑/过滤时展示 roles */
-
-  const { error, data: fetchedData } = await fetchGetAllRoles();
-
-  if (!error) {
-    allRoles.value = fetchedData;
-  }
-});
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <UserSearch v-model:model="searchParams" :all-roles="allRoles" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard :title="$t('page.manage.user.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <PermissionSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <NCard
+      :title="$t('page.manage.permission.title')"
+      :bordered="false"
+      size="small"
+      class="sm:flex-1-hidden card-wrapper"
+    >
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -213,17 +165,16 @@ onMounted(async () => {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="702"
         :loading="loading"
         remote
         :row-key="row => row.id"
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <UserOperateDrawer
+      <PermissionOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
-        :all-roles="allRoles"
         :row-data="editingData"
         @submitted="getDataByPage"
       />

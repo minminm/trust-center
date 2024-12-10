@@ -50,6 +50,7 @@ def get_all_roles():
 @view_role.route("/getRoleList", methods=["POST"])
 @jwt_required()
 def get_role_list():
+    app.logger.error(request.get_json())
     search_params = RoleSearchParams(**request.get_json())
 
     app.logger.info("search parmas: %s", search_params)
@@ -59,10 +60,14 @@ def get_role_list():
         filters.append(Role.name.like(f"%{search_params.name}%"))
     if search_params.code:
         filters.append(Role.code.like(f"%{search_params.code}%"))
+    if search_params.desc:
+        filters.append(Role.description.like(f"%{search_params.desc}%"))
     if search_params.perms:
         filters.append(
             Role.perm_ids.contains(get_perm_ids_by_name(search_params.perms))
         )
+    if search_params.status:
+        filters.append(Role.deleted == search_params.status)
 
     app.logger.info(filters.__len__())
 
@@ -135,6 +140,7 @@ def add_role():
         name=insert_model.name,
         code=insert_model.code,
         deleted=insert_model.status,
+        description=insert_model.desc,
         perm_ids=get_perm_ids_by_name(insert_model.perms),
     )
 

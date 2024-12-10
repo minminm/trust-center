@@ -103,9 +103,11 @@ declare namespace Api {
       permDesc: string;
     }>;
 
+    type PermModel = Pick<Api.SystemManage.Permission, 'permName' | 'permCode' | 'permDesc' | 'status'>;
+
     /** permission search params */
     type PermSearchParams = CommonType.RecordNullable<
-      Pick<Api.SystemManage.Permission, 'permName' | 'permCode' | 'permDesc'> & CommonSearchParams
+      Pick<Api.SystemManage.Permission, 'permName' | 'permCode' | 'permDesc' | 'status'> & CommonSearchParams
     >;
 
     /** role list */
@@ -130,7 +132,7 @@ declare namespace Api {
 
     /** role search params */
     type RoleSearchParams = CommonType.RecordNullable<
-      Pick<Api.SystemManage.Role, 'roleName' | 'roleCode' | 'status' | 'rolePerms'> & CommonSearchParams
+      Pick<Api.SystemManage.Role, 'roleName' | 'roleCode' | 'roleDesc' | 'status' | 'rolePerms'> & CommonSearchParams
     >;
 
     /** role list */

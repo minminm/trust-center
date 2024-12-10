@@ -275,6 +275,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'manage_permission',
+        path: '/manage/permission',
+        component: 'view.manage_permission',
+        meta: {
+          title: 'manage_permission',
+          i18nKey: 'route.manage_permission'
+        }
+      },
+      {
         name: 'manage_role',
         path: '/manage/role',
         component: 'view.manage_role',
@@ -618,6 +627,26 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'plugin_video',
           i18nKey: 'route.plugin_video',
           icon: 'mdi:video'
+        }
+      }
+    ]
+  },
+  {
+    name: 'trust-manage',
+    path: '/trust-manage',
+    component: 'layout.base',
+    meta: {
+      title: 'trust-manage',
+      i18nKey: 'route.trust-manage'
+    },
+    children: [
+      {
+        name: 'trust-manage_monitor',
+        path: '/trust-manage/monitor',
+        component: 'view.trust-manage_monitor',
+        meta: {
+          title: 'trust-manage_monitor',
+          i18nKey: 'route.trust-manage_monitor'
         }
       }
     ]

@@ -53,6 +53,7 @@ declare module "@elegant-router/types" {
     "login": "/login/:module(pwd-login)?";
     "manage": "/manage";
     "manage_menu": "/manage/menu";
+    "manage_permission": "/manage/permission";
     "manage_role": "/manage/role";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
@@ -86,6 +87,8 @@ declare module "@elegant-router/types" {
     "plugin_tables_vtable": "/plugin/tables/vtable";
     "plugin_typeit": "/plugin/typeit";
     "plugin_video": "/plugin/video";
+    "trust-manage": "/trust-manage";
+    "trust-manage_monitor": "/trust-manage/monitor";
     "user-center": "/user-center";
   };
 
@@ -143,6 +146,7 @@ declare module "@elegant-router/types" {
     | "manage"
     | "multi-menu"
     | "plugin"
+    | "trust-manage"
     | "user-center"
   >;
 
@@ -181,6 +185,7 @@ declare module "@elegant-router/types" {
     | "function_toggle-auth"
     | "home"
     | "manage_menu"
+    | "manage_permission"
     | "manage_role"
     | "manage_user-detail"
     | "manage_user"
@@ -205,6 +210,7 @@ declare module "@elegant-router/types" {
     | "plugin_tables_vtable"
     | "plugin_typeit"
     | "plugin_video"
+    | "trust-manage_monitor"
     | "user-center"
   >;
 

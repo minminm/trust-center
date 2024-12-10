@@ -1,7 +1,8 @@
 import { request } from '../request';
+
 /** get permission list */
 export function fetchGetPermList(params?: Api.SystemManage.PermSearchParams) {
-  return request<Api.SystemManage.PermList[]>({
+  return request<Api.SystemManage.PermList>({
     url: '/perm/getPermList',
     method: 'post',
     data: params
@@ -141,6 +142,42 @@ export function deleteRole(id: number) {
 export function batchDeleteRole(ids: number[]) {
   return request({
     url: '/role/batchDeleteRole',
+    method: 'delete',
+    data: { ids }
+  });
+}
+
+/** add permission */
+export function addPermission(data: Api.SystemManage.PermModel) {
+  return request<Api.SystemManage.Permission>({
+    url: '/perm/addPermission',
+    method: 'post',
+    data
+  });
+}
+
+/** update permission */
+export function updatePermission(data: Api.SystemManage.PermModel) {
+  return request<Api.SystemManage.Permission>({
+    url: '/perm/updatePermission',
+    method: 'post',
+    data
+  });
+}
+
+/** delete permission */
+export function deletePermission(id: number) {
+  return request({
+    url: '/perm/deletePermission',
+    method: 'delete',
+    params: { id }
+  });
+}
+
+/** batch delete permission */
+export function batchDeletePermission(ids: number[]) {
+  return request({
+    url: '/perm/batchDeletePermission',
     method: 'delete',
     data: { ids }
   });

@@ -43,7 +43,7 @@ function search() {
 
 <template>
   <NCard :bordered="false" size="small" class="card-wrapper">
-    <NCollapse :default-expanded-names="['role-search']">
+    <NCollapse>
       <NCollapseItem :title="$t('common.search')" name="role-search">
         <NForm :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
@@ -53,13 +53,8 @@ function search() {
             <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleCode')" path="roleCode" class="pr-24px">
               <NInput v-model:value="model.roleCode" :placeholder="$t('page.manage.role.form.roleCode')" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.rolePermission')" path="perms" class="pr-24px">
-              <NSelect
-                v-model:value="model.rolePerms"
-                multiple
-                :options="permOptions"
-                :placeholder="$t('page.manage.role.form.rolePerm')"
-              />
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleDesc')" path="roleDesc" class="pr-24px">
+              <NInput v-model:value="model.roleDesc" :placeholder="$t('page.manage.role.form.roleDesc')" />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleStatus')" path="status" class="pr-24px">
               <NSelect
@@ -67,6 +62,14 @@ function search() {
                 :placeholder="$t('page.manage.role.form.roleStatus')"
                 :options="translateOptions(enableStatusOptions)"
                 clearable
+              />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.rolePermission')" path="perms" class="pr-24px">
+              <NSelect
+                v-model:value="model.rolePerms"
+                multiple
+                :options="permOptions"
+                :placeholder="$t('page.manage.role.form.rolePerm')"
               />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6">

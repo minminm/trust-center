@@ -139,7 +139,7 @@ def mock_menu(db: SQLAlchemy):
     menus = [
         # 首页, order: 1
         Menu(
-            id=1,
+            # id=1,
             parent_id=0,
             menu_type=2,
             menu_name="首页",
@@ -153,7 +153,7 @@ def mock_menu(db: SQLAlchemy):
         ),
         # 异常页, order: 3
         Menu(
-            id=2,
+            # id=2,
             parent_id=0,
             menu_type=1,
             menu_name="异常页",
@@ -166,7 +166,7 @@ def mock_menu(db: SQLAlchemy):
             icon_type=1,
         ),
         Menu(
-            id=3,
+            # id=3,
             parent_id=2,
             menu_type=2,
             menu_name="403",
@@ -179,7 +179,7 @@ def mock_menu(db: SQLAlchemy):
             icon_type=1,
         ),
         Menu(
-            id=4,
+            # id=4,
             parent_id=2,
             menu_type=2,
             menu_name="404",
@@ -192,7 +192,7 @@ def mock_menu(db: SQLAlchemy):
             icon_type=1,
         ),
         Menu(
-            id=5,
+            # id=5,
             parent_id=2,
             menu_type=2,
             menu_name="500",
@@ -206,7 +206,7 @@ def mock_menu(db: SQLAlchemy):
         ),
         # 系统管理, order: 4
         Menu(
-            id=6,
+            # id=6,
             parent_id=0,
             menu_type=1,
             menu_name="系统管理",
@@ -219,7 +219,7 @@ def mock_menu(db: SQLAlchemy):
             icon_type=1,
         ),
         Menu(
-            id=7,
+            # id=7,
             parent_id=6,
             menu_type=2,
             menu_name="用户管理",
@@ -232,7 +232,7 @@ def mock_menu(db: SQLAlchemy):
             icon_type=1,
         ),
         Menu(
-            id=8,
+            # id=8,
             parent_id=6,
             menu_type=2,
             menu_name="角色管理",
@@ -245,7 +245,20 @@ def mock_menu(db: SQLAlchemy):
             icon_type=1,
         ),
         Menu(
-            id=9,
+            # id=9,
+            parent_id=6,
+            menu_type=2,
+            menu_name="权限管理",
+            route_name="manage_permission",
+            route_path="/manage/permission",
+            component="view.manage_permission",
+            order=3,
+            i18n_key="route.manage_permission",
+            icon="",
+            icon_type=1,
+        ),
+        Menu(
+            # id=10,
             parent_id=6,
             menu_type=2,
             menu_name="菜单管理",
@@ -259,7 +272,7 @@ def mock_menu(db: SQLAlchemy):
         ),
         # 关于, order: 7
         Menu(
-            id=10,
+            # id=11,
             parent_id=0,
             menu_type=1,
             menu_name="关于",

@@ -192,6 +192,7 @@ const local: App.I18n.Schema = {
     manage_user: '用户管理',
     'manage_user-detail': '用户详情',
     manage_role: '角色管理',
+    manage_permission: '权限管理',
     manage_menu: '菜单管理',
     'multi-menu': '多级菜单',
     'multi-menu_first': '菜单一',
@@ -356,6 +357,21 @@ const local: App.I18n.Schema = {
           enable: '启用',
           disable: '禁用'
         }
+      },
+      permission: {
+        title: '权限列表',
+        permName: '权限名称',
+        permCode: '权限编码',
+        permStatus: '权限状态',
+        permDesc: '权限描述',
+        form: {
+          permName: '请输入权限名称',
+          permCode: '请输入权限编码',
+          permStatus: '请选择权限状态',
+          permDesc: '请输入权限描述'
+        },
+        addPerm: '新增权限',
+        editPerm: '编辑权限'
       },
       role: {
         title: '角色列表',

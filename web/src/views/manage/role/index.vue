@@ -30,7 +30,9 @@ const {
     // the value can not be undefined, otherwise the property in Form will not be reactive
     status: null,
     roleName: null,
-    roleCode: null
+    roleCode: null,
+    roleDesc: null,
+    rolePerms: null
   },
   columns: () => [
     {
@@ -48,24 +50,24 @@ const {
       key: 'roleName',
       title: $t('page.manage.role.roleName'),
       align: 'center',
-      minWidth: 120
+      minWidth: 80
     },
     {
       key: 'roleCode',
       title: $t('page.manage.role.roleCode'),
       align: 'center',
-      minWidth: 120
+      maxWidth: 80
     },
     {
       key: 'roleDesc',
       title: $t('page.manage.role.roleDesc'),
-      minWidth: 120
+      minWidth: 150
     },
     {
       key: 'rolePerms', // New column for role permissions
       title: $t('page.manage.role.rolePermission'),
       align: 'center',
-      minWidth: 150,
+      width: 300,
       render: row => {
         return (
           <div class="flex flex-wrap justify-center gap-8px">
@@ -191,7 +193,7 @@ onMounted(async () => {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="702"
+        :scroll-x="1100"
         :loading="loading"
         remote
         :row-key="row => row.id"
