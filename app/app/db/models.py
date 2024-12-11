@@ -151,8 +151,24 @@ class Monitor(db.Model):
         comment="主键ID, 同时也是对应的基准值表id",
     )
     ip = Column(String(255), comment="IP地址")
-    power_status = Column(SmallInteger, default=0, comment="电源状态, 0: 断电, 1: 上电")
+    power_status = Column(SmallInteger, default=2, comment="电源状态, 1: 上电, 2: 断电")
     trust_status = Column(
-        SmallInteger, default=0, comment="可信状态, 0: 不可信, 1: 可信"
+        SmallInteger, default=2, comment="可信状态, 1: 可信, 2: 不可信"
     )
     identity = Column(String(255), comment="身份标识, 首次连接时提供")
+    remark = Column(String(255), comment="备注")
+    created_at = Column(
+        DateTime(timezone=True), default=func.now(), comment="首次连接时间"
+    )
+    lougout_at = Column(
+        DateTime(timezone=True),
+        comment="最后在线时间",
+    )
+    update_base_at = Column(
+        DateTime(timezone=True),
+        comment="最后一次更新基准值时间",
+    )
+    certify_at = Column(
+        DateTime(timezone=True),
+        comment="最后一次进行可信校验时间",
+    )

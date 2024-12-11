@@ -255,4 +255,61 @@ declare namespace Api {
       children?: MenuTree[];
     };
   }
+
+  /**
+   * namespace TrustManage
+   *
+   * backend api module: "trustManage"
+   */
+  namespace TrustManage {
+    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
+
+    type EnableStatus = 1 | 2;
+
+    /**
+     * host power status
+     *
+     * - "1": "on"
+     * - "2": "off"
+     */
+    type PowerStatus = '1' | '2';
+
+    type PowerOperator = 'on' | 'off' | 'reboot';
+
+    /**
+     * host trust status
+     *
+     * - "1": "trust"
+     * - "2": "mistrust"
+     */
+    type TrustStatus = '1' | '2';
+
+    /** monitor */
+    type Monitor = Common.CommonRecord<{
+      /** ip address */
+      ipAddress: string;
+      /** power status */
+      powerStatus: PowerStatus;
+      /** trust status */
+      trustStatus: TrustStatus;
+      /** remark message */
+      remark: string;
+      /** first connect time */
+      createTime: string;
+      /** last power-on time */
+      logoutTime: string;
+      /** last update base time */
+      updateBaseTime: string;
+      /** last certify time */
+      certifyTime: string;
+    }>;
+
+    /** monitor search params */
+    type MonitorSearchParams = CommonType.RecordNullable<
+      Pick<Api.TrustManage.Monitor, 'ipAddress' | 'remark' | 'powerStatus' | 'trustStatus'> & CommonSearchParams
+    >;
+
+    /** monitor list */
+    type MonitorList = Common.PaginatingQueryRecord<Monitor>;
+  }
 }

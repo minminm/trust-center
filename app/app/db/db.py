@@ -1,12 +1,13 @@
 from turtle import title
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Engine, Identity, create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.common.utils import get_server_ip
+from app.schemas import monitor
 
-from .models import Menu, Permission, Role, User, ConstantRoute
+from .models import Menu, Monitor, Permission, Role, User, ConstantRoute
 
 
 def init_db(db: SQLAlchemy):
@@ -17,6 +18,7 @@ def init_db(db: SQLAlchemy):
     mock_permission(db)
     mock_menu(db)
     mock_constant_route(db)
+    mock_monitor(db)
 
 
 def mock_user(db: SQLAlchemy):
@@ -284,6 +286,33 @@ def mock_menu(db: SQLAlchemy):
             icon="fluent:book-information-24-regular",
             icon_type=1,
         ),
+        # 可信管理, order: 5
+        Menu(
+            # id=12,
+            parent_id=0,
+            menu_type=1,
+            menu_name="可信管理",
+            route_name="trust-manage",
+            route_path="/trust-manage",
+            component="layout.base",
+            order=5,
+            i18n_key="route.trust-manage",
+            icon="",
+            icon_type=1,
+        ),
+        Menu(
+            # id=13,
+            parent_id=12,
+            menu_type=0,
+            menu_name="可信监控",
+            route_name="trust-manage_monitor",
+            route_path="/trust-manage/monitor",
+            component="view.trust-manage_monitor",
+            order=5,
+            i18n_key="route.trust-manage_monitor",
+            icon="",
+            icon_type=1,
+        ),
         # 文档, order: 2
         # Menu(
         #     id=11,
@@ -341,4 +370,56 @@ def mock_constant_route(db: SQLAlchemy):
     ]
 
     db.session.add_all(routes)
+    db.session.commit()
+
+
+def mock_monitor(db: SQLAlchemy):
+    monitors = [
+        Monitor(
+            # id=1,
+            ip="192.168.10.1",
+            power_status=1,
+            trust_status=1,
+            identity="xxxxxxxxxxxxxxxxxx",
+            remark="服务 x",
+        ),
+        Monitor(
+            # id=2,
+            ip="192.161.0.8",
+            power_status=1,
+            trust_status=1,
+            identity="xxxxxxxxxxxxxxxxxx",
+            remark="服务 y",
+        ),
+        Monitor(
+            # id=3,
+            ip="10.11.168.43",
+            power_status=2,
+            trust_status=1,
+            identity="xxxxxxxxxxxxxxxxxx",
+        ),
+        Monitor(
+            # id=4,
+            ip="12.16.10.1",
+            power_status=1,
+            trust_status=2,
+            identity="xxxxxxxxxxxxxxxxxx",
+        ),
+        Monitor(
+            # id=5,
+            ip="192.168.134.132",
+            power_status=2,
+            trust_status=2,
+            identity="xxxxxxxxxxxxxxxxxx",
+            remark="服务 z",
+        ),
+        Monitor(
+            # id=6,
+            ip="43.97.100.1",
+            power_status=1,
+            trust_status=1,
+            identity="xxxxxxxxxxxxxxxxxx",
+        ),
+    ]
+    db.session.add_all(monitors)
     db.session.commit()

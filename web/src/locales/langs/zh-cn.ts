@@ -227,7 +227,10 @@ const local: App.I18n.Schema = {
     plugin_gantt_vtable: 'VTableGantt',
     plugin_typeit: '打字机',
     plugin_tables: '表格',
-    plugin_tables_vtable: 'VTable'
+    plugin_tables_vtable: 'VTable',
+    'trust-manage': '可信管理',
+    // 'trust-manage_'
+    'trust-manage_monitor': '可信监控'
   },
   page: {
     login: {
@@ -483,6 +486,61 @@ const local: App.I18n.Schema = {
         iconType: {
           iconify: 'iconify图标',
           local: '本地图标'
+        }
+      }
+    },
+    'trust-manage': {
+      monitor: {
+        title: '监控列表',
+        ip: 'IP地址',
+        remark: '备注信息',
+        'power-status': '上电状态',
+        'trust-status': '可信状态',
+        'trust-control': '可信控制',
+        'trust-certify': '可信证明',
+        detail: '查看详情',
+        status: {
+          on: '在线',
+          off: '离线',
+          trust: '可信',
+          mistrust: '不可信'
+        },
+        op: {
+          'power-on': '上电',
+          'power-reboot': '重启',
+          'power-off': '断电',
+          'update-base': '更新基准值',
+          certify: '可信校验',
+          'confirm-on': '确认上电吗？',
+          'confirm-reboot': '确定重启吗？',
+          'confirm-off': '确认断电吗？',
+          'confirm-update-base': '确认更新基准值吗？',
+          'confirm-certify': '确认进行可信校验吗？',
+          'power-on-success': '上电成功',
+          'reboot-success': '重启成功',
+          'power-off-success': '断电成功',
+          'power-on-failed': '上电失败, 请查看日志',
+          'reboot-failed': '重启失败, 请查看日志',
+          'power-off-failed': '断电失败, 请查看日志',
+          'update-base-success': '更新基准值成功',
+          'update-base-failed': '更新基准值失败',
+          'certify-success': '可信校验成功, 校验结果为: ',
+          'certify-failed': '可信校验失败, 请查看日志',
+          'batch-power-on': '批量上电',
+          'batch-power-reboot': '批量重启',
+          'batch-power-off': '批量断电',
+          'batch-update-base': '批量更新基准值',
+          'batch-certify': '批量可信校验'
+        },
+        'create-time': '首次连接时间',
+        'logout-time': '最后在线时间',
+        'update-base-time': '最近更新基准值时间',
+        'certify-time': '最近进行可信校验时间',
+        form: {
+          ipAddress: '请输入IP地址',
+          remark: '请输入备注信息',
+          powerStatus: '请选择上电状态',
+          trustStatus: '请输入可信状态'
         }
       }
     }

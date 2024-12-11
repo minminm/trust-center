@@ -658,6 +658,61 @@ declare namespace App {
             };
           };
         };
+        'trust-manage': {
+          monitor: {
+            title: string;
+            ip: string;
+            remark: string;
+            'power-status': string;
+            'trust-status': string;
+            'trust-control': string;
+            'trust-certify': string;
+            detail: string;
+            status: {
+              on: string;
+              off: string;
+              trust: string;
+              mistrust: string;
+            };
+            op: {
+              'power-on': string;
+              'power-reboot': string;
+              'power-off': string;
+              'update-base': string;
+              certify: string;
+              'confirm-on': string;
+              'confirm-reboot': string;
+              'confirm-off': string;
+              'confirm-update-base': string;
+              'confirm-certify': string;
+              'power-on-success': string;
+              'reboot-success': string;
+              'power-off-success': string;
+              'power-on-failed': string;
+              'reboot-failed': string;
+              'power-off-failed': string;
+              'update-base-success': string;
+              'update-base-failed': string;
+              'certify-success': string;
+              'certify-failed': string;
+              'batch-power-on': string;
+              'batch-power-reboot': string;
+              'batch-power-off': string;
+              'batch-update-base': string;
+              'batch-certify': string;
+            };
+            form: {
+              ipAddress: string;
+              remark: string;
+              powerStatus: string;
+              trustStatus: string;
+            };
+            'create-time': string;
+            'logout-time': string;
+            'update-base-time': string;
+            'certify-time': string;
+          };
+        };
       };
       form: {
         required: string;
