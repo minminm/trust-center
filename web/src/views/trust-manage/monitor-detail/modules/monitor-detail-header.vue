@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { h, onMounted, ref } from 'vue';
+import { computed, h, onMounted, ref } from 'vue';
 import { NGi, NGrid, NStatistic } from 'naive-ui';
 import { fetchGetMonitorInfo } from '@/service/api';
 import { $t } from '@/locales';
@@ -14,14 +14,27 @@ const props = defineProps<Props>();
 
 const hostInfo = ref<Api.TrustManage.Monitor>();
 
-onMounted(async () => {
+const loading = ref<boolean>(false);
+
+async function getMonitorInfo(mount: boolean) {
+  loading.value = true;
+
   const { error, data } = await fetchGetMonitorInfo(Number(props.id));
 
   if (!error) {
     hostInfo.value = data;
-
-    console.log(hostInfo.value);
+    if (!mount) {
+      window.$message?.success($t('common.refreshSuccess'));
+    }
+  } else if (!mount) {
+    window.$message?.error($t('common.refreshFailed'));
   }
+
+  loading.value = false;
+}
+
+onMounted(() => {
+  getMonitorInfo(true);
 });
 
 const router = useRouter();
@@ -30,10 +43,12 @@ function navigateBack() {
   router.push({ name: 'trust-manage_monitor' });
 }
 
-// const gridData = [
-//   { label: $t('page.trust-manage.monitor.form.ipAddress'), value: hostInfo.value?.ipAddress },
-//   { label: $t('page.trust-manage.monitor.power-status'), value: hostInfo.value?.powerStatus }
-// ];
+const subtitle = computed(() => {
+  if (hostInfo.value?.remark) {
+    return `${hostInfo.value?.remark} -- `;
+  }
+  return '';
+});
 
 const columns = [
   {
@@ -79,6 +94,13 @@ const columns = [
   {
     render: () =>
       h(NStatistic, {
+        label: $t('page.trust-manage.monitor.certify-times'),
+        value: hostInfo.value?.certifyTimes
+      })
+  },
+  {
+    render: () =>
+      h(NStatistic, {
         label: $t('page.trust-manage.monitor.update-base-time'),
         value: hostInfo.value?.updateBaseTime || '暂无'
       })
@@ -88,53 +110,40 @@ const columns = [
 
 <template>
   <NCard :bordered="false" size="small" class="card-wrapper">
-    <NPageHeader @back="navigateBack">
-      <template #header>{{ $t('route.trust-manage_monitor-detail') }}</template>
-      <template #title>IP: {{ hostInfo?.ipAddress }}</template>
-      <template #subtitle>{{ hostInfo?.remark }}</template>
-      <NGrid :cols="columns.length">
-        <template v-for="column in columns" :key="column.key">
-          <NGi>
-            <component :is="column.render" />
-          </NGi>
+    <NSpin :show="loading">
+      <NPageHeader @back="navigateBack">
+        <template #header>{{ $t('route.trust-manage_monitor-detail') }}</template>
+        <template #title>IP: {{ hostInfo?.ipAddress }}</template>
+        <template #subtitle>
+          {{ subtitle }} {{ $t('page.trust-manage.monitor.create-time') }} : {{ hostInfo?.createTime }}
         </template>
-      </NGrid>
-      <!--
- <NGrid :cols="gridData.length">
-        <NGi>
-          <NStatistic label="正片" value="125 集" />
-        </NGi>
-        <NGi>
-          <NStatistic label="嘉宾" value="22 位" />
-        </NGi>
-        <NGi>
-          <NStatistic label="道歉" value="36 次" />
-        </NGi>
-        <NGi>
-          <NStatistic label="话题" value="83 个" />
-        </NGi>
-        <NGi>
-          <NStatistic label="参考链接" value="2,346 个" />
-        </NGi>
-      </NGrid>
--->
-      <!--
+        <NGrid :cols="columns.length">
+          <template v-for="column in columns" :key="column.key">
+            <NGi>
+              <component :is="column.render" />
+            </NGi>
+          </template>
+        </NGrid>
+        <!--
  <template #avatar>
         <NAvatar src="https://cdnimg103.lizhi.fm/user/2017/02/04/2583325032200238082_160x160.jpg" />
       </template>
 -->
-      <!--
- <template #extra>
-      <NSpace>
-        <NButton>催更</NButton>
-        <NDropdown :options="options" placement="bottom-start">
-          <NButton :bordered="false" style="padding: 0 4px">···</NButton>
-        </NDropdown>
-      </NSpace>
-    </template>
--->
-      <template #footer>{{ $t('page.trust-manage.monitor.create-time') }} : {{ hostInfo?.createTime }}</template>
-    </NPageHeader>
+
+        <template #extra>
+          <NSpace>
+            <NButton size="small" @click="getMonitorInfo(false)">
+              <template #icon>
+                <icon-mdi-refresh class="text-icon" :class="{ 'animate-spin': loading }" />
+              </template>
+              {{ $t('common.refresh') }}
+            </NButton>
+          </NSpace>
+        </template>
+
+        <!-- <template #footer>{{ $t('page.trust-manage.monitor.create-time') }} : {{ hostInfo?.createTime }}</template> -->
+      </NPageHeader>
+    </NSpin>
   </NCard>
 </template>
 

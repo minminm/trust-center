@@ -25,10 +25,11 @@ def handle_connect():
     )
     try:
         record: Monitor = Monitor.query.filter(Monitor.identity == identity).one()
+        record.power_status = 1
         record.certify_times = 0
     except NoResultFound:
         record = Monitor(
-            ip=request.remote_addr, power_status=1, trust_status=1, identity=identity
+            ip=request.remote_addr, power_status=1, trust_status=2, identity=identity
         )
         db.session.add(record)
         db.session.flush()
@@ -105,6 +106,7 @@ def handle_certify_log(data):
                 pcr=[int(i) for i in items[0].split(",")],
                 base_value=items[1],
                 path=items[4],
+                log_status=1,  # 未校验
             )
             log_records.append(log_record)
 
@@ -132,6 +134,9 @@ def handle_certify_log(data):
                         path_base_map[log_record.path].base_value
                         == log_record.base_value
                     )
+                    path_base_map[log_record.path].log_status = (
+                        2 if flag else 3
+                    )  # 更新 log 状态
             monitor_record.trust_status = 1 if flag else 2  # 更新可信状态
             monitor_record.certify_at = datetime.now()
             monitor_record.certify_times += 1

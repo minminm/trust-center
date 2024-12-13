@@ -39,6 +39,8 @@ const local: App.I18n.Schema = {
     operate: '操作',
     pleaseCheckValue: '请检查输入的值是否合法',
     refresh: '刷新',
+    refreshSuccess: '刷新成功',
+    refreshFailed: '刷新失败',
     reset: '重置',
     search: '搜索',
     switch: '切换',
@@ -537,11 +539,31 @@ const local: App.I18n.Schema = {
         'logout-time': '最后在线时间',
         'update-base-time': '最近更新基准值时间',
         'certify-time': '最近进行可信校验时间',
+        'certify-times': '可信校验次数(每次断电后清零)',
         form: {
           ipAddress: '请输入IP地址',
           remark: '请输入备注信息',
           powerStatus: '请选择上电状态',
           trustStatus: '请输入可信状态'
+        }
+      },
+      'base-library': {
+        title: '基准库',
+        path: '度量路径',
+        pcr: 'PCR寄存器槽位',
+        'base-value': '基准值',
+        'verify-value': '度量值',
+        'log-status': '状态',
+        'update-time': '最近更新时间',
+        status: {
+          'not-verify': '未校验',
+          'success-verify': '校验成功',
+          'failed-verify': '校验失败'
+        },
+        form: {
+          path: '请输入度量路径',
+          'base-value': '请输入基准值',
+          'log-status': '请选择度量状态'
         }
       }
     }

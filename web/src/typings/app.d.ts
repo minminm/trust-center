@@ -322,6 +322,8 @@ declare namespace App {
         operate: string;
         pleaseCheckValue: string;
         refresh: string;
+        refreshSuccess: string;
+        refreshFailed: string;
         reset: string;
         search: string;
         switch: string;
@@ -712,6 +714,26 @@ declare namespace App {
             'logout-time': string;
             'update-base-time': string;
             'certify-time': string;
+            'certify-times': string;
+          };
+          'base-library': {
+            title: string;
+            path: string;
+            pcr: string;
+            'base-value': string;
+            'verify-value': string;
+            'log-status': string;
+            'update-time': string;
+            status: {
+              'not-verify': string;
+              'success-verify': string;
+              'failed-verify': string;
+            };
+            form: {
+              path: string;
+              'base-value': string;
+              'log-status': string;
+            };
           };
         };
       };

@@ -264,8 +264,6 @@ declare namespace Api {
   namespace TrustManage {
     type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
 
-    type EnableStatus = 1 | 2;
-
     /**
      * host power status
      *
@@ -302,6 +300,8 @@ declare namespace Api {
       updateBaseTime: string;
       /** last certify time */
       certifyTime: string;
+      /** certify times since last reboot */
+      certifyTimes: number;
     }>;
 
     /** monitor search params */
@@ -311,5 +311,36 @@ declare namespace Api {
 
     /** monitor list */
     type MonitorList = Common.PaginatingQueryRecord<Monitor>;
+
+    /**
+     * host trust status
+     *
+     * - "1": "Not verified"
+     * - "2": "Verification successful"
+     * - "3": "Verification failed"
+     */
+    type LogStatus = '1' | '2' | '3';
+
+    /** trust log */
+    type TrustLog = Common.CommonRecord<{
+      /** log status */
+      logStatus: LogStatus;
+      /** pcr list */
+      pcr: number[];
+      /** file path */
+      path: string;
+      /** base value */
+      baseValue: string;
+      /** verify value */
+      verifyValue: string;
+    }>;
+
+    /** trust log search params */
+    type TrustLogSearchParams = CommonType.RecordNullable<
+      Pick<Api.TrustManage.TrustLog, 'id' | 'path' | 'logStatus' | 'baseValue'> & CommonSearchParams
+    >;
+
+    /** trust log list */
+    type TrustLogList = Common.PaginatingQueryRecord<TrustLog>;
   }
 }

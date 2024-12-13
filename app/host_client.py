@@ -97,18 +97,21 @@ def up_load_log_file(op: str, file_path: str):
 
 
 def main():
-    try:
-        # TODO: 拿到 xxxaaabbb
+    while True:
+        try:
+            # TODO: 拿到 xxxaaabbb
 
-        headers = {"identity": "xxxaaabbb"}
-        sio.connect(f"http://localhost:5000", namespaces=["/host"], headers=headers)
-        context["first_connect"] = True
-        sio.wait()
+            headers = {"identity": "xxxaaabbb"}
+            sio.connect(f"http://localhost:5000", namespaces=["/host"], headers=headers)
+            context["first_connect"] = True
+            sio.wait()
 
-    except KeyboardInterrupt:
-        sio.disconnect()
-    except Exception as e:
-        print(f"Connect exception: {e}")
+        except KeyboardInterrupt:
+            sio.disconnect()
+        except Exception as e:
+            print(f"Connect exception: {e}")
+        finally:
+            continue
 
 
 if __name__ == "__main__":

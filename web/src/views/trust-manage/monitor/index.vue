@@ -206,6 +206,11 @@ function navigateToDetail(id: number) {
   router.push({ name: 'trust-manage_monitor-detail', params: { id } });
 }
 
+const {
+  checkedRowKeys
+  // closeDrawer
+} = useTableOperate(data, getData);
+
 async function handlePower(id: number, op: Api.TrustManage.PowerOperator) {
   const apiFn = op === 'off' ? powerOff : powerOn;
   let successI18nKey: App.I18n.I18nKey;
@@ -256,11 +261,6 @@ async function handleUpdateBase(id: number) {
     window.$message?.error($t('page.trust-manage.monitor.op.update-base-failed'));
   }
 }
-
-const {
-  checkedRowKeys
-  // closeDrawer
-} = useTableOperate(data, getData);
 
 async function handlebactchPower(op: Api.TrustManage.PowerOperator) {
   const ids = checkedRowKeys.value.map(key => Number(key));

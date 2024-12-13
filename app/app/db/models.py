@@ -200,6 +200,17 @@ def get_trust_log_table(host_id: int):
         Column("path", String(255), comment="文件路径"),
         Column("base_value", String(255), comment="基准值"),
         Column("verify_value", String(255), comment="最新log值"),
+        Column(
+            "log_status",
+            SmallInteger,
+            comment="状态, 1: 未校验; 2: 校验成功; 3: 校验失败",
+        ),
+        Column(
+            "update_at",
+            DateTime(timezone=True),
+            onupdate=func.now(),
+            comment="更新时间",
+        ),
     )
 
 

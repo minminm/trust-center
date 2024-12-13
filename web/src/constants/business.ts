@@ -41,3 +41,11 @@ export const trustStatusRecord: Record<Api.TrustManage.TrustStatus, App.I18n.I18
 };
 
 export const trustStatusOptions = transformRecordToOption(trustStatusRecord);
+
+export const trustLogStatusRecord: Record<Api.TrustManage.LogStatus, App.I18n.I18nKey> = {
+  1: 'page.trust-manage.base-library.status.not-verify',
+  2: 'page.trust-manage.base-library.status.success-verify',
+  3: 'page.trust-manage.base-library.status.failed-verify'
+};
+
+export const trustLogStatusOptions = transformRecordToOption(trustLogStatusRecord);

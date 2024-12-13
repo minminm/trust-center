@@ -244,7 +244,7 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
       window.$message?.success($t('common.deleteSuccess'));
       await getData();
     } else {
-      window.$message?.error($t('common.deleteSuccess'));
+      window.$message?.error($t('common.deleteFailed'));
     }
   }
 
@@ -256,7 +256,7 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
       window.$message?.success($t('common.deleteSuccess'));
       await getData();
     } else {
-      window.$message?.error($t('common.deleteSuccess'));
+      window.$message?.error($t('common.deleteFailed'));
     }
   }
 

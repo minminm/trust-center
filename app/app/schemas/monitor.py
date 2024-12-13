@@ -45,3 +45,26 @@ class MonitorInfo(BaseModel):
     @field_serializer("create_at", "logout_at", "update_base_at", "certify_at")
     def serialize_timestamp(self, value: datetime) -> str:
         return value.strftime("%Y-%m-%d %H:%M:%S")
+
+
+class TrustLogParams(PaginaingCommonParams):
+    id: int
+    path: Optional[str] = None
+    log_status: Optional[int] = Field(default=None, alias="logStatus")
+    base_value: Optional[str] = Field(default=None, alias="baseValue")
+
+
+class TrustLogInfo(CommonRecord):
+    id: int
+    log_status: int = Field(serialization_alias="logStatus")
+    pcr: list[int]
+    path: str
+    base_value: str = Field(serialization_alias="baseValue")
+    verify_value: Optional[str] = Field(default=None, serialization_alias="verifyValue")
+    update_at: Optional[datetime] = Field(
+        default=None, serialization_alias="updateTime"
+    )
+
+    @field_serializer("update_at")
+    def serialize_timestamp(self, value: datetime) -> str:
+        return value.strftime("%Y-%m-%d %H:%M:%S")

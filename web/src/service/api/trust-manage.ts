@@ -18,6 +18,15 @@ export function fetchGetMonitorInfo(id: number) {
   });
 }
 
+/** get trust log list */
+export function fetchGetTrustLogList(params?: Api.TrustManage.TrustLogSearchParams) {
+  return request<Api.TrustManage.TrustLogList>({
+    url: '/trustManage/getTrustLogList',
+    method: 'post',
+    data: params
+  });
+}
+
 /** power on */
 export function powerOn(id: number) {
   return request({
