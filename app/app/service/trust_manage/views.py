@@ -13,7 +13,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 import app.common.status as status
 from app.common.response import failed, success
-from app.db.models import Monitor
+from app.db.models import Monitor, get_trust_log_table_model
 from app.schemas.common import PaginatingList, ParamWithId
 from app.schemas.monitor import MonitorInfo, MonitorSearchParams
 from extension import db, socketio
@@ -56,7 +56,7 @@ def get_monitor_list():
             trust_status=str(item.trust_status),
             remark=item.remark,
             create_at=item.created_at,
-            logout_at=item.lougout_at,
+            logout_at=item.logout_at,
         )
 
     app.logger.info("pagination result: %s", pagination.total)
@@ -90,12 +90,17 @@ def get_monitor_info():
             trust_status=str(item.trust_status),
             remark=item.remark,
             create_at=item.created_at,
-            logout_at=item.lougout_at,
+            logout_at=item.logout_at,
             update_base_at=item.update_base_at,
             certify_at=item.certify_at,
+            certify_times=item.certify_times,
         )
 
     data = convert(monitor)
+
+    TRUST_LOG = get_trust_log_table_model(id)
+    data.base_log_num = TRUST_LOG.query().count()
+    # data.trust_log_num = 0
 
     return success(data.model_dump(by_alias=True, exclude_none=True))
 

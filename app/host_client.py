@@ -39,12 +39,13 @@ def on_random_key(data):
     print(f"Received random key: {data}")
     context["random_key"] = data
 
-    # TODO: 生成 key 逻辑
-    key = "xxxxxxx"
+    # TODO: 生成 shared_key 逻辑
+    shared_key = "xxxxxxx"
+    context["shared_key"] = shared_key
 
     # 发送(必须等到建立连接后再能成功发送)
     connect_event.wait()
-    sio.emit("receive_key", key, namespace="/host")
+    sio.emit("receive_shared_key", shared_key, namespace="/host")
 
 
 # 进行可信校验, 向服务端发送 log 文件
@@ -52,21 +53,36 @@ def on_random_key(data):
 def on_certify():
     print(f"Received certify command")
 
-    # TODO: 调用框架, 得到日志
+    # TODO: 修改 log 文件路径
     file_path = "./log1.txt"
+    up_load_log_file("certify", file_path)
 
+
+# 更新基准值, 向服务端发送 log 文件
+@sio.on("update_base", namespace=namespace)
+def on_certify():
+    print(f"Received update base command")
+
+    # TODO: 修改 log 文件路径
+    file_path = "./log1.txt"
+    up_load_log_file("update_base", file_path)
+
+
+def up_load_log_file(op: str, file_path: str):
     # 发送(必须等到建立连接后再能成功发送)
     connect_event.wait()
 
     try:
         with open(file_path, "rb") as f:
-            file_content = f.read()
             file_name = file_path.split("/")[-1]
+            # TODO: 使用 shared_key 对文件内容进行加密
+            shared_key = context["shared_key"]
+            file_content = f.read()
 
             # 发送文件数据到服务端
             sio.emit(
                 "receive_certify_log",
-                {"file_name": file_name, "file_content": file_content},
+                {"op": op, "file_name": file_name, "file_content": file_content},
                 namespace=namespace,
             )
             print(f"File {file_name} sent to server.")
@@ -74,7 +90,7 @@ def on_certify():
     except FileNotFoundError:
         sio.emit(
             "receive_certify_log",
-            {"error": "log file not found"},
+            {"op": op, "error": "log file not found"},
             namespace=namespace,
         )
         print(f"File not found: {file_path}")
@@ -82,6 +98,8 @@ def on_certify():
 
 def main():
     try:
+        # TODO: 拿到 xxxaaabbb
+
         headers = {"identity": "xxxaaabbb"}
         sio.connect(f"http://localhost:5000", namespaces=["/host"], headers=headers)
         context["first_connect"] = True

@@ -161,7 +161,7 @@ class Monitor(db.Model):
     created_at = Column(
         DateTime(timezone=True), default=func.now(), comment="首次连接时间"
     )
-    lougout_at = Column(
+    logout_at = Column(
         DateTime(timezone=True),
         comment="最后在线时间",
     )
@@ -172,6 +172,11 @@ class Monitor(db.Model):
     certify_at = Column(
         DateTime(timezone=True),
         comment="最后一次进行可信校验时间",
+    )
+    certify_times = Column(
+        Integer,
+        default=0,
+        comment="可信检验次数（每次重启清零）",
     )
 
 

@@ -33,6 +33,14 @@ class MonitorInfo(BaseModel):
     certify_at: Optional[datetime] = Field(
         default=None, serialization_alias="certifyTime"
     )
+    certify_times: Optional[int] = Field(default=0, serialization_alias="certifyTimes")
+    base_log_num: Optional[int] = Field(default=None, serialization_alias="baseLogNum")
+    trust_log_num: Optional[int] = Field(
+        default=None, serialization_alias="trustLogNum"
+    )
+    mistrust_log_num: Optional[int] = Field(
+        default=None, serialization_alias="mistrustLogNum"
+    )
 
     @field_serializer("create_at", "logout_at", "update_base_at", "certify_at")
     def serialize_timestamp(self, value: datetime) -> str:
