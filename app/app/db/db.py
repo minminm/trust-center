@@ -1,4 +1,3 @@
-from turtle import title
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Engine, Identity, create_engine
@@ -7,7 +6,15 @@ from sqlalchemy.orm import sessionmaker
 from app.common.utils import get_server_ip
 from app.schemas import monitor
 
-from .models import Menu, Monitor, Permission, Role, User, ConstantRoute
+from .models import (
+    ConstantRoute,
+    Menu,
+    Monitor,
+    Permission,
+    Role,
+    User,
+    get_trust_log_table,
+)
 
 
 def init_db(db: SQLAlchemy):
@@ -259,6 +266,19 @@ def mock_menu(db: SQLAlchemy):
             icon="",
             icon_type=1,
         ),
+        # Menu(
+        #     # id=9,
+        #     parent_id=6,
+        #     menu_type=2,
+        #     menu_name="用户详情",
+        #     route_name="manage_user-detail",
+        #     route_path="/manage/user-detail/:id",
+        #     component="view.manage_user-detail",
+        #     order=5,
+        #     i18n_key="route.manage_user-detail",
+        #     icon="",
+        #     icon_type=1,
+        # ),
         Menu(
             # id=10,
             parent_id=6,
@@ -308,10 +328,25 @@ def mock_menu(db: SQLAlchemy):
             route_name="trust-manage_monitor",
             route_path="/trust-manage/monitor",
             component="view.trust-manage_monitor",
-            order=5,
+            order=1,
             i18n_key="route.trust-manage_monitor",
             icon="",
             icon_type=1,
+        ),
+        Menu(
+            # id=14,
+            parent_id=12,
+            menu_type=0,
+            menu_name="Host 详情",
+            route_name="trust-manage_monitor-detail",
+            route_path="/trust-manage/monitor-detail/:id",
+            component="view.trust-manage_monitor-detail",
+            order=2,
+            i18n_key="route.trust-manage_monitor-detail",
+            icon="",
+            icon_type=1,
+            hide_in_menu=True,
+            active_menu="trust-manage_monitor",
         ),
         # 文档, order: 2
         # Menu(

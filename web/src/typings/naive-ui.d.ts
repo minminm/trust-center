@@ -16,7 +16,7 @@ declare namespace NaiveUI {
    *
    * if you want to add a custom column, you should add a key to this type
    */
-  type CustomColumnKey = 'operate' | 'operate2'; // 增加 operate2，支持定义两列用于操作的button
+  type CustomColumnKey = 'operate' | 'operate2' | 'operate3'; // 增加 operate2 + operator3, 支持更多操作
 
   type SetTableColumnKey<C, T> = Omit<C, 'key'> & { key: keyof T | CustomColumnKey };
 

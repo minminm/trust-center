@@ -4,11 +4,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from app.schemas.common import (
-    PaginaingCommonParams,
-    PaginaingResopnseParams,
-    CommonRecord,
-)
+from app.schemas.common import (CommonRecord, PaginaingCommonParams,
+                                PaginaingResopnseParams)
 
 
 class UserSearchParams(PaginaingCommonParams):
@@ -46,11 +43,3 @@ class UserInsertModel(BaseModel):
     gender: Optional[int] = Field(default=1, alias="userGender")
     email: Optional[str] = Field(default=None, alias="userEmail")
     roles: list[str] = Field(alias="userRoles")
-
-
-class UserDeleteParams(BaseModel):
-    id: int
-
-
-class UserBatchDeleteParams(BaseModel):
-    ids: list[int]

@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
+import { useRouter } from 'vue-router';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -64,7 +65,7 @@ const {
       key: 'remark',
       title: $t('page.trust-manage.monitor.remark'),
       align: 'center',
-      minWidth: 120
+      minWidth: 80
     },
     {
       key: 'powerStatus',
@@ -169,7 +170,7 @@ const {
       width: 220,
       render: row => (
         <div class="flex-center gap-8px">
-          <NButton type="primary" tertiary size="small" onClick={() => handleCertify(row.id)}>
+          <NButton type="info" tertiary size="small" onClick={() => handleCertify(row.id)}>
             {$t('page.trust-manage.monitor.op.certify')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleUpdateBase(row.id)}>
@@ -184,9 +185,26 @@ const {
           </NPopconfirm>
         </div>
       )
+    },
+    {
+      key: 'operate3',
+      title: $t('common.otherAction'),
+      align: 'center',
+      width: 100,
+      render: row => (
+        <NButton type="info" text onClick={() => navigateToDetail(row.id)}>
+          {$t('page.trust-manage.monitor.detail')}
+        </NButton>
+      )
     }
   ]
 });
+
+const router = useRouter();
+
+function navigateToDetail(id: number) {
+  router.push({ name: 'trust-manage_monitor-detail', params: { id } });
+}
 
 async function handlePower(id: number, op: Api.TrustManage.PowerOperator) {
   const apiFn = op === 'off' ? powerOff : powerOn;
@@ -329,7 +347,7 @@ async function handleBatchUpdateBase() {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="702"
+        :scroll-x="1000"
         :loading="loading"
         remote
         :row-key="row => row.id"

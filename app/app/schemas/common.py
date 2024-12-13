@@ -1,5 +1,5 @@
-from typing import List, Optional, TypeVar, Generic
 from datetime import datetime
+from typing import Generic, List, Optional, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -33,3 +33,11 @@ class CommonRecord(BaseModel):
     )
     create_by: Optional[int] = Field(default=None, serialization_alias="createBy")
     update_by: Optional[int] = Field(default=None, serialization_alias="updateBy")
+
+
+class ParamWithId(BaseModel):
+    id: int
+
+
+class ParamWithIds(BaseModel):
+    ids: list[int]

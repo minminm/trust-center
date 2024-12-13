@@ -1,10 +1,9 @@
-from app.schemas.common import (
-    PaginaingCommonParams,
-    PaginaingResopnseParams,
-    CommonRecord,
-)
 from typing import List, Optional
+
 from pydantic import BaseModel, Field
+
+from app.schemas.common import (CommonRecord, PaginaingCommonParams,
+                                PaginaingResopnseParams)
 
 
 class PermSearchParams(PaginaingCommonParams):
@@ -33,11 +32,3 @@ class PermInsertModel(BaseModel):
     name: str = Field(alias="PermName")
     code: str = Field(alias="PermCode")
     desc: Optional[str] = Field(default=None, alias="permDesc")
-
-
-class PermDeleteParams(BaseModel):
-    id: int
-
-
-class PermBatchDeleteParams(BaseModel):
-    ids: list[int]

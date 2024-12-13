@@ -1,4 +1,5 @@
 from datetime import datetime
+import functools
 from turtle import title
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, SmallInteger, String, func
@@ -101,9 +102,9 @@ class Menu(db.Model):
     i18n_key = Column(String(255), nullable=False, comment="i18n键")
     deleted = Column(SmallInteger, default=1, comment="状态, 1: 启用, 2: 禁用")
     hide_in_menu = Column(
-        SmallInteger, default=0, comment="是否在菜单中隐藏, 0: 否, 1: 是"
+        Boolean, default=False, comment="是否在菜单中隐藏, false: 否, true: 是"
     )
-    activate_menu = Column(String(255), nullable=True, comment="高亮的菜单")
+    active_menu = Column(String(255), nullable=True, comment="高亮的菜单")
     order = Column(SmallInteger, default=0, comment="菜单顺序")
     icon = Column(String(255), nullable=False, comment="图标")
     icon_type = Column(
@@ -172,3 +173,48 @@ class Monitor(db.Model):
         DateTime(timezone=True),
         comment="最后一次进行可信校验时间",
     )
+
+
+@functools.cache
+def get_trust_log_table(host_id: int):
+
+    # class TrustLog(db.Model):
+    __tablename__ = f"trust_log_{host_id}"
+
+    return db.Table(
+        __tablename__,
+        db.metadata,
+        Column(
+            "id",
+            Integer,
+            primary_key=True,
+            autoincrement=True,
+            comment="主键ID",
+        ),
+        Column("pcr", ARRAY(Integer), default=[], comment="用到的PCR寄存器槽位列表"),
+        Column("path", String(255), comment="文件路径"),
+        Column("base_value", String(255), comment="基准值"),
+        Column("verify_value", String(255), comment="最新log值"),
+    )
+
+
+def get_trust_log_table_model(host_id: int):
+    class BaseModel:
+        """基础模型类"""
+
+        @classmethod
+        def query(cls):
+            return db.session.query(cls)
+
+    trust_log_table = get_trust_log_table(host_id)
+
+    # 使用 type 动态生成 Model 类
+    model_class = type(
+        f"TrustLogModel_{host_id}",  # 动态类名
+        (BaseModel, db.Model),  # 继承基础类和 SQLAlchemy 的 Model
+        {
+            "__table__": trust_log_table,  # 绑定表
+        },
+    )
+
+    return model_class

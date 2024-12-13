@@ -29,8 +29,8 @@ export const menuIconTypeRecord: Record<Api.SystemManage.IconType, App.I18n.I18n
 export const menuIconTypeOptions = transformRecordToOption(menuIconTypeRecord);
 
 export const powerStatusRecord: Record<Api.TrustManage.PowerStatus, App.I18n.I18nKey> = {
-  '1': 'page.trust-manage.monitor.status.on',
-  '2': 'page.trust-manage.monitor.status.off'
+  1: 'page.trust-manage.monitor.status.on',
+  2: 'page.trust-manage.monitor.status.off'
 };
 
 export const powerStatusOptions = transformRecordToOption(powerStatusRecord);

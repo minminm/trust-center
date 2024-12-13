@@ -8,6 +8,7 @@ const local: App.I18n.Schema = {
   },
   common: {
     action: '操作',
+    otherAction: '其他操作',
     add: '新增',
     addSuccess: '添加成功',
     addFailed: '添加失败',
@@ -229,8 +230,8 @@ const local: App.I18n.Schema = {
     plugin_tables: '表格',
     plugin_tables_vtable: 'VTable',
     'trust-manage': '可信管理',
-    // 'trust-manage_'
-    'trust-manage_monitor': '可信监控'
+    'trust-manage_monitor': '可信监控',
+    'trust-manage_monitor-detail': 'Host 详情'
   },
   page: {
     login: {

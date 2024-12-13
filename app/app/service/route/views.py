@@ -1,16 +1,17 @@
 from os import name
+from typing import List, Sequence
+
 from flasgger import swag_from
 from flask import Blueprint
+from flask import current_app as app
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from sqlalchemy import false
-from flask import current_app as app
-from app.db.models import ConstantRoute, User, Role, Menu
 from sqlalchemy.orm.exc import NoResultFound
-import app.common.status as status
 
-from app.common.response import success, failed
+import app.common.status as status
+from app.common.response import failed, success
+from app.db.models import ConstantRoute, Menu, Role, User
 from app.schemas.route import Route, RouteMeta, UserRoute
-from typing import Sequence, List
 
 view_route = Blueprint("route", __name__)
 
@@ -49,6 +50,7 @@ def get_user_routes():
                 order=menu.order,
                 constant=False,
                 hide_in_menu=menu.hide_in_menu,
+                active_menu=menu.active_menu,
             ),
         )
 

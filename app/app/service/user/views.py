@@ -1,31 +1,25 @@
-from os import name
 import sys
+from os import name
 from time import sleep
 from turtle import update
+from typing import List, Sequence
+
 from flasgger import swag_from
 from flask import Blueprint
+from flask import current_app as app
 from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from sqlalchemy import and_, false
-from flask import current_app as app
-from extension import db
-from app.db.models import ConstantRoute, User, Role, Menu
+from sqlalchemy import and_, false, or_
 from sqlalchemy.orm.exc import NoResultFound
-import app.common.status as status
-from sqlalchemy import or_
-from app.common.response import success, failed
-from app.schemas.common import PaginatingList
-from app.schemas.user import (
-    UserBatchDeleteParams,
-    UserDeleteParams,
-    UserInsertModel,
-    UserSearchParams,
-    UserInfo,
-    UserUpdateModel,
-)
-from typing import Sequence, List
 
-from app.service.helper import get_role_names_by_id, get_role_ids_by_name
+import app.common.status as status
+from app.common.response import failed, success
+from app.db.models import ConstantRoute, Menu, Role, User
+from app.schemas.common import PaginatingList, ParamWithId, ParamWithIds
+from app.schemas.user import (UserInfo, UserInsertModel, UserSearchParams,
+                              UserUpdateModel)
+from app.service.helper import get_role_ids_by_name, get_role_names_by_id
+from extension import db
 
 view_user = Blueprint("user", __name__)
 
@@ -140,7 +134,7 @@ def add_user():
 @view_user.route("/deleteUser", methods=["DELETE"])
 @jwt_required()
 def delete_user():
-    delete_params = UserDeleteParams(**request.args.to_dict())
+    delete_params = ParamWithId(**request.args.to_dict())
 
     db.session.delete(User.query.get(delete_params.id))
     db.session.commit()
@@ -151,7 +145,7 @@ def delete_user():
 @view_user.route("/batchDeleteUser", methods=["DELETE"])
 @jwt_required()
 def batch_delete_user():
-    delete_params = UserBatchDeleteParams(**request.get_json())
+    delete_params = ParamWithIds(**request.get_json())
 
     delete_nums = User.query.filter(User.id.in_(delete_params.ids)).delete()
     db.session.commit()

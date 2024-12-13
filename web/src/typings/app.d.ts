@@ -291,6 +291,7 @@ declare namespace App {
       };
       common: {
         action: string;
+        otherAction: string;
         add: string;
         addSuccess: string;
         addFailed: string;

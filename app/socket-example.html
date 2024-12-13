@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+</head>
+<body>
+    <h1>Socket.IO 通信示例</h1>
+    <button id="connectBtn">连接</button>
+    <button id="disconnectBtn" disabled>断开</button>
+    <input type="text" id="messageInput" placeholder="输入消息">
+    <button id="sendBtn" disabled>发送</button>
+    <div id="messages"></div>
+
+    <script>
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const messageInput = document.getElementById('messageInput');
+        const messagesDiv = document.getElementById('messages');
+
+        let socket;
+
+        connectBtn.addEventListener('click', () => {
+            // 连接到Socket.IO服务器
+            socket = io('http://localhost:5000/host', {query: {identity:'aaaabbbbccccdddd'}});
+
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                messagesDiv.innerHTML += '<p>已连接到服务器</p>';
+                
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                sendBtn.disabled = false;
+            });
+
+            socket.on('server_response', (data) => {
+                console.log('Server response:', data);
+                messagesDiv.innerHTML += `<p>${data.data}</p>`;
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                messagesDiv.innerHTML += '<p>已断开服务器连接</p>';
+                
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                sendBtn.disabled = true;
+            });
+        });
+
+        disconnectBtn.addEventListener('click', () => {
+            if (socket) {
+                socket.disconnect();
+            }
+        });
+
+        sendBtn.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (socket && message) {
+                socket.emit('client_message', { message: message });
+                messageInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

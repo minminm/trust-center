@@ -9,10 +9,12 @@ import sys
 
 from flasgger import Swagger
 from flask import Flask
-
+from flask_socketio import SocketIO
 from app import config
 from app.service import register_routes
-from extension import db, jwt
+from extension import db, jwt, socketio
+
+# socketio = SocketIO()
 
 
 ############################################################
@@ -31,6 +33,7 @@ def create_app():
 
     register_routes(app)
 
+    socketio.init_app(app, cors_allowed_origins="*")
     with app.app_context():
         from .common import error_handlers  # noqa: F401, E402
         from .common import log_handlers
@@ -44,5 +47,7 @@ def create_app():
         app.logger.info(70 * "*")
 
         app.logger.info("Service initialized!")
+
+    # from app.socket import host
 
     return app

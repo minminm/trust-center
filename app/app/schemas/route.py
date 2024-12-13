@@ -10,9 +10,7 @@ class RouteMeta(BaseModel):
     constant: Optional[bool] = None
     icon: Optional[str] = None
     order: Optional[int] = None
-    activate_menu: Optional[str] = Field(
-        default=None, serialization_alias="activateMenu"
-    )
+    active_menu: Optional[str] = Field(default=None, serialization_alias="activeMenu")
 
 
 class Route(BaseModel):

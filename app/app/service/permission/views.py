@@ -1,31 +1,25 @@
-from os import name
 import sys
+from os import name
 from time import sleep
+from typing import List, Sequence
+
 from flasgger import swag_from
 from flask import Blueprint
+from flask import current_app as app
 from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from sqlalchemy import and_, false
-from flask import current_app as app
-from app.db.models import ConstantRoute, Permission, User, Role, Menu
+from sqlalchemy import and_, false, or_
 from sqlalchemy.orm.exc import NoResultFound
-import app.common.status as status
-from sqlalchemy import or_
-from app.common.response import success, failed
-from app.schemas.common import PaginatingList
-from app.schemas.permission import (
-    PermBatchDeleteParams,
-    PermDeleteParams,
-    PermInfo,
-    PermInsertModel,
-    PermSearchParams,
-    PermUpdateModel,
-)
-from app.schemas.role import RoleSearchParams, RoleInfo
-from typing import Sequence, List
-from extension import db
 
+import app.common.status as status
+from app.common.response import failed, success
+from app.db.models import ConstantRoute, Menu, Permission, Role, User
+from app.schemas.common import PaginatingList, ParamWithId, ParamWithIds
+from app.schemas.permission import (PermInfo, PermInsertModel,
+                                    PermSearchParams, PermUpdateModel)
+from app.schemas.role import RoleInfo, RoleSearchParams
 from app.service.helper import get_perm_ids_by_name, get_perm_names_by_id
+from extension import db
 
 view_perm = Blueprint("perm", __name__)
 
@@ -147,7 +141,7 @@ def add_perm():
 @view_perm.route("/deletePermission", methods=["DELETE"])
 @jwt_required()
 def delete_perm():
-    delete_params = PermDeleteParams(**request.args.to_dict())
+    delete_params = ParamWithId(**request.args.to_dict())
 
     db.session.delete(Permission.query.get(delete_params.id))
     db.session.commit()
@@ -158,7 +152,7 @@ def delete_perm():
 @view_perm.route("/batchDeletePermission", methods=["DELETE"])
 @jwt_required()
 def batch_delete_perm():
-    delete_params = PermBatchDeleteParams(**request.get_json())
+    delete_params = ParamWithIds(**request.get_json())
 
     delete_nums = Permission.query.filter(Permission.id.in_(delete_params.ids)).delete()
     db.session.commit()

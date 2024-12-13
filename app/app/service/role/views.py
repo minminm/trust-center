@@ -1,29 +1,24 @@
-from os import name
 import sys
+from os import name
 from time import sleep
+from typing import List, Sequence
+
 from flasgger import swag_from
 from flask import Blueprint
+from flask import current_app as app
 from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from sqlalchemy import and_, false
-from flask import current_app as app
-from app.db.models import ConstantRoute, User, Role, Menu
+from sqlalchemy import and_, false, or_
 from sqlalchemy.orm.exc import NoResultFound
+
 import app.common.status as status
-from sqlalchemy import or_
-from app.common.response import success, failed
-from app.schemas.common import PaginatingList
-from app.schemas.role import (
-    RoleBatchDeleteParams,
-    RoleDeleteParams,
-    RoleInsertModel,
-    RoleSearchParams,
-    RoleInfo,
-    RoleUpdateModel,
-)
-from typing import Sequence, List
-from extension import db
+from app.common.response import failed, success
+from app.db.models import ConstantRoute, Menu, Role, User
+from app.schemas.common import PaginatingList, ParamWithId, ParamWithIds
+from app.schemas.role import (RoleInfo, RoleInsertModel, RoleSearchParams,
+                              RoleUpdateModel)
 from app.service.helper import get_perm_ids_by_name, get_perm_names_by_id
+from extension import db
 
 view_role = Blueprint("role", __name__)
 
@@ -153,7 +148,7 @@ def add_role():
 @view_role.route("/deleteRole", methods=["DELETE"])
 @jwt_required()
 def delete_role():
-    delete_params = RoleDeleteParams(**request.args.to_dict())
+    delete_params = ParamWithId(**request.args.to_dict())
 
     db.session.delete(Role.query.get(delete_params.id))
     db.session.commit()
@@ -164,7 +159,7 @@ def delete_role():
 @view_role.route("/batchDeleteRole", methods=["DELETE"])
 @jwt_required()
 def batch_delete_role():
-    delete_params = RoleBatchDeleteParams(**request.get_json())
+    delete_params = ParamWithIds(**request.get_json())
 
     delete_nums = Role.query.filter(Role.id.in_(delete_params.ids)).delete()
     db.session.commit()

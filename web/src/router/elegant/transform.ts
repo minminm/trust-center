@@ -235,6 +235,7 @@ const routeMap: RouteMap = {
   "plugin_video": "/plugin/video",
   "trust-manage": "/trust-manage",
   "trust-manage_monitor": "/trust-manage/monitor",
+  "trust-manage_monitor-detail": "/trust-manage/monitor-detail/:id",
   "user-center": "/user-center"
 };
 

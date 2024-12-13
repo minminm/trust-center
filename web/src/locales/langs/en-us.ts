@@ -8,6 +8,7 @@ const local: App.I18n.Schema = {
   },
   common: {
     action: 'Action',
+    otherAction: 'Other Action',
     add: 'Add',
     addSuccess: 'Add Success',
     addFailed: 'Add Failed',
@@ -227,7 +228,10 @@ const local: App.I18n.Schema = {
     plugin_gantt_vtable: 'VTableGantt',
     plugin_typeit: 'Typeit',
     plugin_tables: 'Tables',
-    plugin_tables_vtable: 'VTable'
+    plugin_tables_vtable: 'VTable',
+    'trust-manage': 'Trust Manage',
+    'trust-manage_monitor': 'Trust Monitor',
+    'trust-manage_monitor-detail': 'Host Detail'
   },
   page: {
     login: {

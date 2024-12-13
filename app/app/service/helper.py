@@ -1,4 +1,5 @@
 from typing import Sequence
+
 from app.db.models import Permission, Role
 
 

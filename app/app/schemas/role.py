@@ -1,10 +1,9 @@
-from app.schemas.common import (
-    PaginaingCommonParams,
-    PaginaingResopnseParams,
-    CommonRecord,
-)
 from typing import List, Optional
+
 from pydantic import BaseModel, Field
+
+from app.schemas.common import (CommonRecord, PaginaingCommonParams,
+                                PaginaingResopnseParams)
 
 
 class RoleSearchParams(PaginaingCommonParams):
@@ -37,11 +36,3 @@ class RoleInsertModel(BaseModel):
     code: str = Field(alias="roleCode")
     desc: Optional[str] = Field(default=None, alias="roleDesc")
     perms: list[str] = Field(alias="rolePerms")
-
-
-class RoleDeleteParams(BaseModel):
-    id: int
-
-
-class RoleBatchDeleteParams(BaseModel):
-    ids: list[int]

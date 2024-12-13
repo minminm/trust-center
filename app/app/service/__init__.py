@@ -4,11 +4,11 @@ from flask import Blueprint, Flask, current_app, request
 from app.common.response import success
 from app.service.auth.views import auth
 from app.service.core.views import core
-from app.service.route.views import view_route
-from app.service.user.views import view_user
-from app.service.role.views import view_role
 from app.service.permission.views import view_perm
+from app.service.role.views import view_role
+from app.service.route.views import view_route
 from app.service.trust_manage.views import view_trust_manage
+from app.service.user.views import view_user
 
 
 def register_routes(app: Flask):

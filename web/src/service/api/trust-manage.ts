@@ -9,6 +9,15 @@ export function fetchGetMonitorList(params?: Api.TrustManage.MonitorSearchParams
   });
 }
 
+/** get monitor detail */
+export function fetchGetMonitorInfo(id: number) {
+  return request<Api.TrustManage.Monitor>({
+    url: '/trustManage/getMonitorInfo',
+    method: 'get',
+    params: { id }
+  });
+}
+
 /** power on */
 export function powerOn(id: number) {
   return request({

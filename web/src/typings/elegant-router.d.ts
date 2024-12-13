@@ -89,6 +89,7 @@ declare module "@elegant-router/types" {
     "plugin_video": "/plugin/video";
     "trust-manage": "/trust-manage";
     "trust-manage_monitor": "/trust-manage/monitor";
+    "trust-manage_monitor-detail": "/trust-manage/monitor-detail/:id";
     "user-center": "/user-center";
   };
 
@@ -210,6 +211,7 @@ declare module "@elegant-router/types" {
     | "plugin_tables_vtable"
     | "plugin_typeit"
     | "plugin_video"
+    | "trust-manage_monitor-detail"
     | "trust-manage_monitor"
     | "user-center"
   >;

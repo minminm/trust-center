@@ -648,6 +648,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'trust-manage_monitor',
           i18nKey: 'route.trust-manage_monitor'
         }
+      },
+      {
+        name: 'trust-manage_monitor-detail',
+        path: '/trust-manage/monitor-detail/:id',
+        component: 'view.trust-manage_monitor-detail',
+        meta: {
+          title: 'trust-manage_monitor-detail',
+          i18nKey: 'route.trust-manage_monitor-detail'
+        }
       }
     ]
   },

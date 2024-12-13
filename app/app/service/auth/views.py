@@ -1,19 +1,16 @@
 from ast import List
 from typing import Sequence
+
 from flasgger import swag_from
 from flask import Blueprint
 from flask import current_app as app
 from flask import request
-from flask_jwt_extended import (
-    create_access_token,
-    create_refresh_token,
-    get_jwt_identity,
-    jwt_required,
-)
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                get_jwt_identity, jwt_required)
 from sqlalchemy.orm.exc import NoResultFound
 
 import app.common.status as status
-from app.common.response import success, failed
+from app.common.response import failed, success
 from app.db.models import Permission, Role, User
 from app.schemas.auth import LoginRequest, LoginToken, UserInfo
 
