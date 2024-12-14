@@ -8,6 +8,50 @@ import { transformElegantRoutesToVueRoutes } from '../elegant/transform';
  *
  * @link https://github.com/soybeanjs/elegant-router?tab=readme-ov-file#custom-route
  */
+export const myCustomRoutes: CustomRoute[] = [
+  {
+    name: 'document',
+    path: '/document',
+    component: 'layout.base',
+    meta: {
+      title: 'document',
+      i18nKey: 'route.document',
+      order: 2,
+      icon: 'mdi:file-document-multiple-outline'
+    },
+    children: [
+      {
+        name: 'document_openatom',
+        path: '/document/openatom',
+        component: 'view.iframe-page',
+        props: {
+          url: 'https://competition.atomgit.com/competitionInfo?id=7cb36313a262d01dbe4842b506968f63'
+        },
+        meta: {
+          title: 'document_openatom',
+          i18nKey: 'route.document_openatom',
+          order: 1,
+          localIcon: 'openatom'
+        }
+      },
+      {
+        name: 'document_ai',
+        path: '/document/ai',
+        component: 'view.iframe-page',
+        props: {
+          url: 'http://trustcenterai.nat300.top'
+        },
+        meta: {
+          title: 'document_ai',
+          i18nKey: 'route.document_ai',
+          order: 1,
+          icon: 'carbon:ai-results'
+        }
+      }
+    ]
+  }
+];
+
 const customRoutes: CustomRoute[] = [
   {
     name: 'exception',
@@ -196,6 +240,11 @@ export function createStaticRoutes() {
     authRoutes
   };
 }
+
+// /** create my static routes */
+// export function createMyStaticRoutes() {
+//   const myCustomRoutes
+// }
 
 /**
  * Get auth vue routes

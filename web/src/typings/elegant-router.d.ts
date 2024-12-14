@@ -30,6 +30,8 @@ declare module "@elegant-router/types" {
     "document_naive": "/document/naive";
     "document_antd": "/document/antd";
     "document_alova": "/document/alova";
+    "document_openatom": "/document/openatom";
+    "document_ai": "/document/ai";
     "403": "/403";
     "404": "/404";
     "500": "/500";
@@ -88,6 +90,7 @@ declare module "@elegant-router/types" {
     "plugin_typeit": "/plugin/typeit";
     "plugin_video": "/plugin/video";
     "trust-manage": "/trust-manage";
+    "trust-manage_certify-log": "/trust-manage/certify-log";
     "trust-manage_monitor": "/trust-manage/monitor";
     "trust-manage_monitor-detail": "/trust-manage/monitor-detail/:id";
     "user-center": "/user-center";
@@ -123,6 +126,8 @@ declare module "@elegant-router/types" {
     | "document_naive"
     | "document_antd"
     | "document_alova"
+    | "document_openatom"
+    | "document_ai"
   >;
 
   /**
@@ -211,6 +216,7 @@ declare module "@elegant-router/types" {
     | "plugin_tables_vtable"
     | "plugin_typeit"
     | "plugin_video"
+    | "trust-manage_certify-log"
     | "trust-manage_monitor-detail"
     | "trust-manage_monitor"
     | "user-center"
@@ -234,6 +240,8 @@ declare module "@elegant-router/types" {
     | "document_naive"
     | "document_antd"
     | "document_alova"
+    | "document_openatom"
+    | "document_ai"
   >;
 
   /**

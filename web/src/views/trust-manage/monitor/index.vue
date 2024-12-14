@@ -214,19 +214,15 @@ const {
 async function handlePower(id: number, op: Api.TrustManage.PowerOperator) {
   const apiFn = op === 'off' ? powerOff : powerOn;
   let successI18nKey: App.I18n.I18nKey;
-  let failedI18nKey: App.I18n.I18nKey;
   switch (op) {
     case 'on':
-      successI18nKey = 'page.trust-manage.monitor.op.power-off-success';
-      failedI18nKey = 'page.trust-manage.monitor.op.power-off-failed';
+      successI18nKey = 'page.trust-manage.monitor.op.power-on-success';
       break;
     case 'reboot':
       successI18nKey = 'page.trust-manage.monitor.op.reboot-success';
-      failedI18nKey = 'page.trust-manage.monitor.op.reboot-failed';
       break;
     default:
       successI18nKey = 'page.trust-manage.monitor.op.power-off-success';
-      failedI18nKey = 'page.trust-manage.monitor.op.power-off-failed';
       break;
   }
 
@@ -235,20 +231,20 @@ async function handlePower(id: number, op: Api.TrustManage.PowerOperator) {
   if (!error) {
     window.$message?.success($t(successI18nKey));
     await getData();
-  } else {
-    window.$message?.error($t(failedI18nKey));
   }
 }
 
 async function handleCertify(id: number) {
+  loading.value = true;
+
   const { error, data: msg } = await certify(id);
 
   if (!error) {
     window.$message?.success($t('page.trust-manage.monitor.op.certify-success') + msg);
     await getData();
-  } else {
-    window.$message?.error($t('page.trust-manage.monitor.op.certify-failed'));
   }
+
+  loading.value = false;
 }
 
 async function handleUpdateBase(id: number) {
@@ -257,8 +253,6 @@ async function handleUpdateBase(id: number) {
   if (!error) {
     window.$message?.success($t('page.trust-manage.monitor.op.update-base-success') + msg);
     await getData();
-  } else {
-    window.$message?.error($t('page.trust-manage.monitor.op.update-base-failed'));
   }
 }
 
@@ -267,19 +261,15 @@ async function handlebactchPower(op: Api.TrustManage.PowerOperator) {
 
   const apiFn = op === 'off' ? batchPowerOn : batchPowerOff;
   let successI18nKey: App.I18n.I18nKey;
-  let failedI18nKey: App.I18n.I18nKey;
   switch (op) {
     case 'on':
       successI18nKey = 'page.trust-manage.monitor.op.power-off-success';
-      failedI18nKey = 'page.trust-manage.monitor.op.power-off-failed';
       break;
     case 'reboot':
       successI18nKey = 'page.trust-manage.monitor.op.reboot-success';
-      failedI18nKey = 'page.trust-manage.monitor.op.reboot-failed';
       break;
     default:
       successI18nKey = 'page.trust-manage.monitor.op.power-off-success';
-      failedI18nKey = 'page.trust-manage.monitor.op.power-off-failed';
       break;
   }
 
@@ -288,8 +278,6 @@ async function handlebactchPower(op: Api.TrustManage.PowerOperator) {
   if (!error) {
     window.$message?.success($t(successI18nKey));
     await getData();
-  } else {
-    window.$message?.error($t(failedI18nKey));
   }
 }
 
@@ -301,8 +289,6 @@ async function handleBatchCertify() {
   if (!error) {
     window.$message?.success($t('page.trust-manage.monitor.op.certify-success') + msg);
     await getData();
-  } else {
-    window.$message?.error($t('page.trust-manage.monitor.op.certify-failed'));
   }
 }
 
@@ -314,8 +300,6 @@ async function handleBatchUpdateBase() {
   if (!error) {
     window.$message?.success($t('page.trust-manage.monitor.op.update-base-success'));
     await getData();
-  } else {
-    window.$message?.error($t('page.trust-manage.monitor.op.update-base-failed'));
   }
 }
 </script>

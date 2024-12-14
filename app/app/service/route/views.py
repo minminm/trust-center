@@ -83,7 +83,7 @@ def get_constant_routes():
             name=route.name,
             path=route.path,
             component=route.component,
-            props=route.props,
+            # props=route.props,
             meta=RouteMeta(
                 title=route.title,
                 i18n_key=route.i18n_key,

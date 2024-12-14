@@ -5,8 +5,12 @@ from flasgger import swag_from
 from flask import Blueprint
 from flask import current_app as app
 from flask import request
-from flask_jwt_extended import (create_access_token, create_refresh_token,
-                                get_jwt_identity, jwt_required)
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+    jwt_required,
+)
 from sqlalchemy.orm.exc import NoResultFound
 
 import app.common.status as status

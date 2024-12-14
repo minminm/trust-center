@@ -157,7 +157,7 @@ def mock_menu(db: SQLAlchemy):
             component="layout.base$view.home",
             order=1,
             i18n_key="route.home",
-            icon="mdi:monitor-dashboard",
+            icon="mdi:home-outline",
             icon_type=1,
         ),
         # 异常页, order: 3
@@ -263,7 +263,7 @@ def mock_menu(db: SQLAlchemy):
             component="view.manage_permission",
             order=3,
             i18n_key="route.manage_permission",
-            icon="",
+            icon="mdi:key-outline",
             icon_type=1,
         ),
         # Menu(
@@ -317,7 +317,7 @@ def mock_menu(db: SQLAlchemy):
             component="layout.base",
             order=5,
             i18n_key="route.trust-manage",
-            icon="",
+            icon="carbon:linux-namespace",
             icon_type=1,
         ),
         Menu(
@@ -330,7 +330,7 @@ def mock_menu(db: SQLAlchemy):
             component="view.trust-manage_monitor",
             order=1,
             i18n_key="route.trust-manage_monitor",
-            icon="",
+            icon="mdi:monitor-dashboard",
             icon_type=1,
         ),
         Menu(
@@ -347,6 +347,19 @@ def mock_menu(db: SQLAlchemy):
             icon_type=1,
             hide_in_menu=True,
             active_menu="trust-manage_monitor",
+        ),
+        Menu(
+            # id=13,
+            parent_id=12,
+            menu_type=0,
+            menu_name="可信校验日志",
+            route_name="trust-manage_certify-log",
+            route_path="/trust-manage/certify-log",
+            component="view.trust-manage_certify-log",
+            order=3,
+            i18n_key="route.trust-manage_certify-log",
+            icon="icon-park-outline:table",
+            icon_type=1,
         ),
         # 文档, order: 2
         # Menu(

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { computed, h, onMounted, ref } from 'vue';
-import { NGi, NGrid, NStatistic } from 'naive-ui';
+import { NConfigProvider, NGi, NGrid, NStatistic } from 'naive-ui';
 import { fetchGetMonitorInfo } from '@/service/api';
 import { $t } from '@/locales';
 import { powerStatusRecord, trustStatusRecord } from '@/constants/business';
@@ -50,6 +50,28 @@ const subtitle = computed(() => {
   return '';
 });
 
+function createStyledStatistic(label: string, value: string, themeOverrides = {}) {
+  // 默认主题覆盖
+  const defaultThemeOverrides = {
+    Statistic: {
+      valueFontSize: '20px', // 默认字体大小
+      ...themeOverrides // 合并传入的自定义样式
+    }
+  };
+
+  return h(
+    NConfigProvider,
+    {
+      themeOverrides: defaultThemeOverrides
+    },
+    () =>
+      h(NStatistic, {
+        label,
+        value
+      })
+  );
+}
+
 const columns = [
   {
     render: () => {
@@ -80,30 +102,30 @@ const columns = [
   {
     render: () =>
       h(NStatistic, {
-        label: $t('page.trust-manage.monitor.logout-time'),
-        value: hostInfo.value?.logoutTime || '暂无'
-      })
-  },
-  {
-    render: () =>
-      h(NStatistic, {
-        label: $t('page.trust-manage.monitor.certify-time'),
-        value: hostInfo.value?.certifyTime || '暂无'
-      })
-  },
-  {
-    render: () =>
-      h(NStatistic, {
         label: $t('page.trust-manage.monitor.certify-times'),
         value: hostInfo.value?.certifyTimes
       })
   },
   {
-    render: () =>
-      h(NStatistic, {
-        label: $t('page.trust-manage.monitor.update-base-time'),
-        value: hostInfo.value?.updateBaseTime || '暂无'
-      })
+    render: () => {
+      const label = $t('page.trust-manage.monitor.certify-time');
+      const value = hostInfo.value?.certifyTime || '暂无';
+      return createStyledStatistic(label, value);
+    }
+  },
+  {
+    render: () => {
+      const label = $t('page.trust-manage.monitor.update-base-time');
+      const value = hostInfo.value?.updateBaseTime || '暂无';
+      return createStyledStatistic(label, value);
+    }
+  },
+  {
+    render: () => {
+      const label = $t('page.trust-manage.monitor.logout-time');
+      const value = hostInfo.value?.logoutTime || '暂无';
+      return createStyledStatistic(label, value);
+    }
   }
 ];
 </script>

@@ -27,6 +27,15 @@ export function fetchGetTrustLogList(params?: Api.TrustManage.TrustLogSearchPara
   });
 }
 
+/** get certify log list */
+export function fetchGetCertifyLogList(params?: Api.TrustManage.CertifyLogSearchParams) {
+  return request<Api.TrustManage.CertifyLogList>({
+    url: '/trustManage/getCertifyLogList',
+    method: 'post',
+    data: params
+  });
+}
+
 /** power on */
 export function powerOn(id: number) {
   return request({

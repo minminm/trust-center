@@ -342,5 +342,33 @@ declare namespace Api {
 
     /** trust log list */
     type TrustLogList = Common.PaginatingQueryRecord<TrustLog>;
+
+    /** certify log */
+    type CertifyLog = Common.CommonRecord<{
+      /** ip address */
+      ipAddress: string;
+      /** log status */
+      logStatus: TrustStatus;
+      /** success num */
+      successNum: number;
+      /** failed num */
+      failedNum: number;
+      /** not verify num */
+      notVerifyNum: number;
+      /** certify times */
+      certifyTimes: number;
+    }>;
+
+    /** certify log search params */
+    type CertifyLogSearchParams = CommonType.RecordNullable<
+      Pick<Api.TrustManage.CertifyLog, 'ipAddress' | 'logStatus' | 'createBy'> &
+        CommonSearchParams & {
+          beginTime: string;
+          endTime: string;
+        }
+    >;
+
+    /** certify log list */
+    type CertifyLogList = Common.PaginatingQueryRecord<CertifyLog>;
   }
 }

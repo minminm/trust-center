@@ -173,6 +173,8 @@ const local: App.I18n.Schema = {
     document_naive: 'Naive UI Document',
     document_antd: 'Ant Design Vue Document',
     document_alova: 'Alova Document',
+    document_openatom: 'Competition Official Website',
+    document_ai: 'AI Assistant',
     'user-center': 'User Center',
     about: 'About',
     function: 'System Function',

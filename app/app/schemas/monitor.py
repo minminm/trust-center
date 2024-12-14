@@ -1,4 +1,5 @@
 from datetime import datetime
+from tkinter import NO
 from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_serializer
@@ -55,7 +56,6 @@ class TrustLogParams(PaginaingCommonParams):
 
 
 class TrustLogInfo(CommonRecord):
-    id: int
     log_status: int = Field(serialization_alias="logStatus")
     pcr: list[int]
     path: str
@@ -66,5 +66,30 @@ class TrustLogInfo(CommonRecord):
     )
 
     @field_serializer("update_at")
+    def serialize_timestamp(self, value: datetime) -> str:
+        return value.strftime("%Y-%m-%d %H:%M:%S")
+
+
+class CertifyLogParams(PaginaingCommonParams):
+    ip: Optional[str] = Field(default=None, alias="ipAddress")
+    log_status: Optional[int] = Field(default=None, alias="logStatus")
+    create_by: Optional[str] = Field(default=None, alias="createBy")
+    begin_at: Optional[datetime] = Field(default=None, alias="beginTime")
+    end_at: Optional[datetime] = Field(default=None, alias="endTime")
+
+
+class CertifyLogInfo(BaseModel):
+    ip: str = Field(serialization_alias="ipAddress")
+    log_status: int = Field(serialization_alias="logStatus")
+    success_num: int = Field(serialization_alias="successNum")
+    failed_num: int = Field(serialization_alias="failedNum")
+    not_verify_num: int = Field(serialization_alias="notVerifyNum")
+    certify_times: int = Field(serialization_alias="certifyTimes")
+    create_at: Optional[datetime] = Field(
+        default=None, serialization_alias="createTime"
+    )
+    create_by: Optional[str] = Field(default=None, serialization_alias="createBy")
+
+    @field_serializer("create_at")
     def serialize_timestamp(self, value: datetime) -> str:
         return value.strftime("%Y-%m-%d %H:%M:%S")

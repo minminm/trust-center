@@ -2,6 +2,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
+# class RouteProps(BaseModel):
+
 
 class RouteMeta(BaseModel):
     title: str

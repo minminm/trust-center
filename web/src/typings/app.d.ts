@@ -735,6 +735,27 @@ declare namespace App {
               'log-status': string;
             };
           };
+          'certify-log': {
+            title: string;
+            ip: string;
+            'success-num': string;
+            'failed-num': string;
+            'not-verify-num': string;
+            'certify-times': string;
+            'create-at': string;
+            'create-by': string;
+            'log-status': string;
+            status: {
+              'success-verify': string;
+              'failed-verify': string;
+            };
+            form: {
+              ip: string;
+              'log-status': string;
+              'begin-at': string;
+              'end-at': string;
+            };
+          };
         };
       };
       form: {

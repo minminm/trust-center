@@ -1,8 +1,9 @@
+from calendar import c
 import sys
 from os import name
 from time import sleep
 from typing import List, Sequence
-
+from threading import Event, Lock
 from flasgger import swag_from
 from flask import Blueprint
 from flask import current_app as app
@@ -13,15 +14,25 @@ from sqlalchemy.orm.exc import NoResultFound
 
 import app.common.status as status
 from app.common.response import failed, success
-from app.db.models import Monitor, get_trust_log_table_model
+from app.db.models import CertifyLog, Monitor, get_trust_log_table_model
 from app.schemas.common import PaginatingList, ParamWithId
 from app.schemas.monitor import (
+    CertifyLogInfo,
+    CertifyLogParams,
     MonitorInfo,
     MonitorSearchParams,
     TrustLogInfo,
     TrustLogParams,
 )
 from extension import db, socketio
+from app.socket.host import (
+    activate_clients,
+    certification_results,
+    certification_locks,
+    update_base_results,
+    update_base_locks,
+)
+import asyncio
 
 view_trust_manage = Blueprint("trust_manage", __name__)
 
@@ -161,6 +172,56 @@ def get_trust_log_list():
     return success(data.model_dump(by_alias=True, exclude_none=True))
 
 
+@view_trust_manage.route("/getCertifyLogList", methods=["POST"])
+@jwt_required()
+def get_certify_log_list():
+    search_params = CertifyLogParams(**request.get_json())
+
+    app.logger.info("search parmas: %s", search_params)
+
+    filters = []
+    if search_params.ip:
+        filters.append(CertifyLog.ip.like(f"%{search_params.ip}%"))
+    if search_params.log_status:
+        filters.append(CertifyLog.log_status == search_params.log_status)
+    if search_params.create_by:
+        filters.append(CertifyLog.create_by.like(f"%{search_params.create_by}%"))
+
+    app.logger.info(filters.__len__())
+
+    pagination = (
+        CertifyLog.query.order_by(CertifyLog.id)
+        .filter(and_(*filters))
+        .paginate(
+            page=search_params.current, per_page=search_params.size, error_out=False
+        )
+    )
+
+    def convert(item: CertifyLog) -> CertifyLogInfo:
+        return CertifyLogInfo(
+            id=item.id,
+            ip=item.ip,
+            log_status=item.log_status,
+            success_num=item.success_num,
+            failed_num=item.failed_num,
+            not_verify_num=item.not_verify_num,
+            create_by=item.create_by,
+            create_at=item.created_at,
+            certify_times=item.certify_times,
+        )
+
+    app.logger.info("pagination result: %s", pagination.total)
+
+    data = PaginatingList[CertifyLogInfo](
+        current=pagination.page,
+        size=pagination.per_page,
+        total=pagination.total,
+        records=[convert(item) for item in pagination.items],
+    )
+
+    return success(data.model_dump(by_alias=True, exclude_none=True))
+
+
 @view_trust_manage.route("/powerOn", methods=["POST"])
 @jwt_required()
 def power_on():
@@ -177,15 +238,87 @@ def power_off():
 @jwt_required()
 def certify():
     id = ParamWithId(**request.args).id
-    socketio.emit("certify", namespace="/host")
 
-    return success()
+    monitor_record: Monitor = Monitor.query.filter(Monitor.id == id).one()
+
+    target_sid = None
+    for sid, values in activate_clients.items():
+        if values["monitor_id"] == id:
+            target_sid = sid
+            break
+
+    # 为此次校验创建事件和锁
+    result_event = Event()
+    result_lock = Lock()
+
+    # 使用唯一标识符存储事件和锁
+    certification_results[id] = None
+    certification_locks[id] = {"event": result_event, "lock": result_lock}
+
+    socketio.emit("certify", room=target_sid, namespace="/host")
+
+    result_received = result_event.wait(timeout=5)
+    if not result_received:
+        return failed(code=status.SERVICE_1001_CERTIFY_TIMEOUT, msg="校验超时")
+
+    # 获取并返回结果
+    with certification_locks[id]["lock"]:
+        result = certification_results[id]
+        app.logger.info(result)
+
+        trust: bool = result["failed"] == 0
+
+        certify_log = CertifyLog(
+            ip=monitor_record.ip,
+            log_status=(1 if trust else 2),
+            success_num=result["success"],
+            failed_num=result["failed"],
+            not_verify_num=result["not_verify"],
+            created_at=result["certify_at"],
+            create_by=get_jwt_identity(),
+            certify_times=result["certify_times"],
+        )
+        db.session.add(certify_log)
+        monitor_record.trust_status = 1 if trust else 2
+        db.session.commit()
+
+        # 清理
+        del certification_results[id]
+        del certification_locks[id]
+
+    return success(data="可信" if trust else "不可信")
 
 
 @view_trust_manage.route("/updateBase", methods=["POST"])
 @jwt_required()
 def update_base():
-    return success()
+    id = ParamWithId(**request.args).id
+
+    target_sid = None
+    for sid, values in activate_clients.items():
+        if values["monitor_id"] == id:
+            target_sid = sid
+            break
+
+    result_event = Event()
+    result_lock = Lock()
+
+    update_base_results[id] = None
+    update_base_locks[id] = {"event": result_event, "lock": result_lock}
+
+    socketio.emit("update_base", room=target_sid, namespace="/host")
+
+    result_received = result_event.wait(timeout=5)
+    if not result_received:
+        return failed(code=status.SERVICE_1002_UPDATE_BASE_TIMEOUT, msg="校验超时")
+
+    with update_base_locks[id]["lock"]:
+        result = update_base_results[id]
+
+        del update_base_results[id]
+        del update_base_locks[id]
+
+    return success(data=f"新的基准值数量：{result['base_num']}")
 
 
 @view_trust_manage.route("/batchPowerOn", methods=["POST"])

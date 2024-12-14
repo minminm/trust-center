@@ -176,6 +176,8 @@ const routeMap: RouteMap = {
   "document_naive": "/document/naive",
   "document_antd": "/document/antd",
   "document_alova": "/document/alova",
+  "document_openatom": "/document/openatom",
+  "document_ai": "/document/ai",
   "403": "/403",
   "404": "/404",
   "500": "/500",
@@ -234,6 +236,7 @@ const routeMap: RouteMap = {
   "plugin_typeit": "/plugin/typeit",
   "plugin_video": "/plugin/video",
   "trust-manage": "/trust-manage",
+  "trust-manage_certify-log": "/trust-manage/certify-log",
   "trust-manage_monitor": "/trust-manage/monitor",
   "trust-manage_monitor-detail": "/trust-manage/monitor-detail/:id",
   "user-center": "/user-center"

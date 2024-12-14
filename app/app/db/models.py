@@ -234,3 +234,26 @@ def get_trust_log_table_model(host_id: int):
     )
 
     return model_class
+
+
+class CertifyLog(db.Model):
+    __tablename__ = "certify_log"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        comment="主键ID, 同时也是对应的基准值表id",
+    )
+    ip = Column(String(255), comment="IP地址")
+    log_status = Column(SmallInteger, comment="状态, 1: 校验成功; 2: 校验失败")
+    success_num = Column(Integer, comment="校验成功日志条数")
+    failed_num = Column(Integer, comment="校验失败日志条数")
+    not_verify_num = Column(Integer, comment="未校验日志条数")
+    created_at = Column(DateTime(timezone=True), comment="校验完成时间")
+    create_by = Column(String(255), comment="发起校验的用户")
+    certify_times = Column(
+        Integer,
+        default=0,
+        comment="可信检验次数（每次重启清零）",
+    )

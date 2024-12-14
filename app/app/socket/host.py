@@ -1,7 +1,8 @@
+from collections import defaultdict
 from datetime import datetime
 import json
 import threading
-from typing import Dict
+from typing import DefaultDict, Dict
 from flask_socketio import emit
 from flask import current_app as app, request
 from app.db.models import Monitor, get_trust_log_table, get_trust_log_table_model
@@ -9,11 +10,18 @@ from extension import socketio
 from sqlalchemy.orm.exc import NoResultFound
 from extension import db
 import secrets
+import asyncio
 
 namespace = "/host"
 
 activate_clients: Dict[str, Dict] = {}
 lock = threading.Lock()
+
+# 全局字典，用于执行结果
+certification_results = {}
+certification_locks = {}
+update_base_results = {}
+update_base_locks = {}
 
 
 @socketio.on("connect", namespace)
@@ -113,6 +121,7 @@ def handle_certify_log(data):
         op = data.get("op")
         # update_base: 覆盖旧数据
         if op == "update_base":
+            result_dict = {}
             db.session.query(TRUST_LOG).delete()
             db.session.add_all(log_records)
             monitor_record.trust_status = 1  # 更新基准值, 默认可信
@@ -120,28 +129,61 @@ def handle_certify_log(data):
             monitor_record.certify_times = 0
             db.session.commit()
             app.logger.info("Update base scuccess.")
+
+            result_dict["updated_at"] = datetime.now()
+            result_dict["base_num"] = len(log_records)
+            # 通知等待的线程
+            if monitor_id in update_base_locks:
+                with update_base_locks[monitor_id]["lock"]:
+                    update_base_locks[monitor_id]["event"].set()
+                    update_base_results[monitor_id] = result_dict
         # certify: 与数据库里的基准值做对比
         elif op == "certify":
+            failed_records: set[int] = set()
+            result_dict = {}
+            result_dict["success"] = 0
+            result_dict["failed"] = 0
+            result_dict["not_verify"] = 0
+
             paths = [log_record.path for log_record in log_records]
-            records = TRUST_LOG.query.filter(TRUST_LOG.path.in_(paths)).all()
+            records = TRUST_LOG.query().filter(TRUST_LOG.path.in_(paths)).all()
             path_base_map = {record.path: record for record in records}
-            flag = True
             for log_record in log_records:
-                if log_record.path in path_base_map:
-                    path_base_map[log_record.path].pcr = log_record.pcr
-                    path_base_map[log_record.path].verify_value = log_record.base_value
-                    flag &= (
-                        path_base_map[log_record.path].base_value
-                        == log_record.base_value
-                    )
-                    path_base_map[log_record.path].log_status = (
-                        2 if flag else 3
-                    )  # 更新 log 状态
-            monitor_record.trust_status = 1 if flag else 2  # 更新可信状态
+                # 更新基准值表 -- 在表中并且未被设置为 false
+                if (
+                    log_record.path in path_base_map
+                    and log_record.path not in failed_records
+                ):
+                    base_record = path_base_map[log_record.path]
+                    base_record.verify_value = log_record.base_value
+                    if log_record.base_value != base_record.base_value:
+                        base_record.log_status = 3
+                        failed_records.add(log_record.path)
+                    else:
+                        base_record.log_status = 2
+
+                # 更新本次日志成功/失败/未校验条数
+                if log_record.path not in path_base_map:  # 不在基准值表中
+                    result_dict["not_verify"] += 1
+                else:
+                    base_record = path_base_map[log_record.path]
+                    if base_record.base_value == log_record.base_value:
+                        result_dict["success"] += 1
+                    else:
+                        result_dict["failed"] += 1
+
             monitor_record.certify_at = datetime.now()
             monitor_record.certify_times += 1
+            result_dict["certify_times"] = monitor_record.certify_times
+            result_dict["certify_at"] = monitor_record.certify_at
             db.session.commit()
-            app.logger.info(f"Certify scuccess. Result={flag}")
+            app.logger.info(f"Certify scuccess.")
+
+            # 通知等待的线程
+            if monitor_id in certification_locks:
+                with certification_locks[monitor_id]["lock"]:
+                    certification_locks[monitor_id]["event"].set()
+                    certification_results[monitor_id] = result_dict
         else:
             app.logger.error(f"Op not support, op={op}.")
             return

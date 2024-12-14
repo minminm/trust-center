@@ -5,7 +5,7 @@ import { useBoolean } from '@sa/hooks';
 import type { CustomRoute, ElegantConstRoute, LastLevelRouteKey, RouteKey, RouteMap } from '@elegant-router/types';
 import { SetupStoreId } from '@/enum';
 import { router } from '@/router';
-import { createStaticRoutes, getAuthVueRoutes } from '@/router/routes';
+import { createStaticRoutes, getAuthVueRoutes, myCustomRoutes } from '@/router/routes';
 import { ROOT_ROUTE } from '@/router/routes/builtin';
 import { getRouteName, getRoutePath } from '@/router/elegant/transform';
 import { fetchGetConstantRoutes, fetchGetUserRoutes, fetchIsRouteExist } from '@/service/api';
@@ -57,6 +57,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     const constantRoutesMap = new Map<string, ElegantConstRoute>([]);
 
     routes.forEach(route => {
+      constantRoutesMap.set(route.name, route);
+    });
+    myCustomRoutes.forEach(route => {
       constantRoutesMap.set(route.name, route);
     });
 

@@ -20,7 +20,9 @@ export function setupElegantRouter() {
         'document_unocss',
         'document_naive',
         'document_antd',
-        'document_alova'
+        'document_alova',
+        'document_openatom',
+        'document_ai'
       ]
     },
     routePathTransformer(routeName, routePath) {

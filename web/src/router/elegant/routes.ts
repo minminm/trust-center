@@ -641,6 +641,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'trust-manage_certify-log',
+        path: '/trust-manage/certify-log',
+        component: 'view.trust-manage_certify-log',
+        meta: {
+          title: 'trust-manage_certify-log',
+          i18nKey: 'route.trust-manage_certify-log'
+        }
+      },
+      {
         name: 'trust-manage_monitor',
         path: '/trust-manage/monitor',
         component: 'view.trust-manage_monitor',

@@ -54,7 +54,7 @@ def on_certify():
     print(f"Received certify command")
 
     # TODO: 修改 log 文件路径
-    file_path = "./log1.txt"
+    file_path = "./log1-fake.txt"
     up_load_log_file("certify", file_path)
 
 
@@ -97,21 +97,21 @@ def up_load_log_file(op: str, file_path: str):
 
 
 def main():
-    while True:
-        try:
-            # TODO: 拿到 xxxaaabbb
+    # while True:
+    try:
+        # TODO: 拿到 xxxaaabbb
 
-            headers = {"identity": "xxxaaabbb"}
-            sio.connect(f"http://localhost:5000", namespaces=["/host"], headers=headers)
-            context["first_connect"] = True
-            sio.wait()
+        headers = {"identity": "xxxaaabbb"}
+        sio.connect(f"http://localhost:5000", namespaces=["/host"], headers=headers)
+        context["first_connect"] = True
+        sio.wait()
 
-        except KeyboardInterrupt:
-            sio.disconnect()
-        except Exception as e:
-            print(f"Connect exception: {e}")
-        finally:
-            continue
+    except KeyboardInterrupt:
+        sio.disconnect()
+    except Exception as e:
+        print(f"Connect exception: {e}")
+    # finally:
+    #     continue
 
 
 if __name__ == "__main__":

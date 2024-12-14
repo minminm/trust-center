@@ -175,6 +175,8 @@ const local: App.I18n.Schema = {
     document_naive: 'Naive UI文档',
     document_antd: 'Ant Design Vue文档',
     document_alova: 'Alova文档',
+    document_openatom: '大赛官网',
+    document_ai: 'AI助手',
     'user-center': '个人中心',
     about: '关于',
     function: '系统功能',
@@ -233,7 +235,8 @@ const local: App.I18n.Schema = {
     plugin_tables_vtable: 'VTable',
     'trust-manage': '可信管理',
     'trust-manage_monitor': '可信监控',
-    'trust-manage_monitor-detail': 'Host 详情'
+    'trust-manage_monitor-detail': 'Host 详情',
+    'trust-manage_certify-log': '可信校验日志'
   },
   page: {
     login: {
@@ -525,7 +528,7 @@ const local: App.I18n.Schema = {
           'power-on-failed': '上电失败, 请查看日志',
           'reboot-failed': '重启失败, 请查看日志',
           'power-off-failed': '断电失败, 请查看日志',
-          'update-base-success': '更新基准值成功',
+          'update-base-success': '更新基准值成功：',
           'update-base-failed': '更新基准值失败',
           'certify-success': '可信校验成功, 校验结果为: ',
           'certify-failed': '可信校验失败, 请查看日志',
@@ -544,7 +547,7 @@ const local: App.I18n.Schema = {
           ipAddress: '请输入IP地址',
           remark: '请输入备注信息',
           powerStatus: '请选择上电状态',
-          trustStatus: '请输入可信状态'
+          trustStatus: '请选择可信状态'
         }
       },
       'base-library': {
@@ -564,6 +567,27 @@ const local: App.I18n.Schema = {
           path: '请输入度量路径',
           'base-value': '请输入基准值',
           'log-status': '请选择度量状态'
+        }
+      },
+      'certify-log': {
+        title: '校验日志',
+        ip: 'IP地址',
+        'success-num': '成功条数',
+        'failed-num': '失败条数',
+        'not-verify-num': '未校验条数',
+        'certify-times': '校验次数',
+        'create-at': '校验完成时间',
+        'create-by': '校验发起者',
+        'log-status': '校验结果',
+        status: {
+          'success-verify': '可信',
+          'failed-verify': '不可信'
+        },
+        form: {
+          ip: '请输入IP地址',
+          'log-status': '请选择校验结果',
+          'begin-at': '请选择开始时间',
+          'end-at': '请选择结束时间'
         }
       }
     }

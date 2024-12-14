@@ -59,6 +59,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   plugin_tables_vtable: () => import("@/views/plugin/tables/vtable/index.vue"),
   plugin_typeit: () => import("@/views/plugin/typeit/index.vue"),
   plugin_video: () => import("@/views/plugin/video/index.vue"),
+  "trust-manage_certify-log": () => import("@/views/trust-manage/certify-log/index.vue"),
   "trust-manage_monitor-detail": () => import("@/views/trust-manage/monitor-detail/[id].vue"),
   "trust-manage_monitor": () => import("@/views/trust-manage/monitor/index.vue"),
   "user-center": () => import("@/views/user-center/index.vue"),
