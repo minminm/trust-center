@@ -29,7 +29,7 @@ def handle_connect():
     identity = request.headers.get("identity")
 
     app.logger.info(
-        "Client connected, ip=%s, identity=%s", request.remote_addr, identity
+        "Host Client connected, ip=%s, identity=%s", request.remote_addr, identity
     )
     try:
         record: Monitor = Monitor.query.filter(Monitor.identity == identity).one()

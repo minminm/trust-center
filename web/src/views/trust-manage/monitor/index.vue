@@ -14,6 +14,7 @@ import {
   fetchGetMonitorList,
   powerOff,
   powerOn,
+  reboot,
   updateBase
 } from '@/service/api';
 import MonitorSearch from './modules/monitor-search.vue';
@@ -212,16 +213,19 @@ const {
 } = useTableOperate(data, getData);
 
 async function handlePower(id: number, op: Api.TrustManage.PowerOperator) {
-  const apiFn = op === 'off' ? powerOff : powerOn;
+  let apiFn;
   let successI18nKey: App.I18n.I18nKey;
   switch (op) {
     case 'on':
+      apiFn = powerOn;
       successI18nKey = 'page.trust-manage.monitor.op.power-on-success';
       break;
     case 'reboot':
+      apiFn = reboot;
       successI18nKey = 'page.trust-manage.monitor.op.reboot-success';
       break;
     default:
+      apiFn = powerOff;
       successI18nKey = 'page.trust-manage.monitor.op.power-off-success';
       break;
   }

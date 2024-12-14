@@ -54,6 +54,15 @@ export function powerOff(id: number) {
   });
 }
 
+/** reboot */
+export function reboot(id: number) {
+  return request({
+    url: '/trustManage/reboot',
+    method: 'post',
+    params: { id }
+  });
+}
+
 /** certify */
 export function certify(id: number) {
   return request({

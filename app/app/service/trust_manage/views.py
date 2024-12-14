@@ -26,12 +26,14 @@ from app.schemas.monitor import (
 )
 from extension import db, socketio
 from app.socket.host import (
-    activate_clients,
+    activate_clients as activate_host_clients,
     certification_results,
     certification_locks,
     update_base_results,
     update_base_locks,
 )
+from app.socket.bmc import activate_clients as activate_bmc_clients
+
 import asyncio
 
 view_trust_manage = Blueprint("trust_manage", __name__)
@@ -225,12 +227,48 @@ def get_certify_log_list():
 @view_trust_manage.route("/powerOn", methods=["POST"])
 @jwt_required()
 def power_on():
+    id = ParamWithId(**request.args).id
+
+    target_sid = None
+    for sid, values in activate_bmc_clients.items():
+        if values["monitor_id"] == id:
+            target_sid = sid
+            break
+
+    socketio.emit("power_on", room=target_sid, namespace="/bmc")
+
     return success()
 
 
 @view_trust_manage.route("/powerOff", methods=["POST"])
 @jwt_required()
 def power_off():
+    id = ParamWithId(**request.args).id
+
+    target_sid = None
+    for sid, values in activate_bmc_clients.items():
+        if values["monitor_id"] == id:
+            target_sid = sid
+            break
+
+    socketio.emit("power_off", room=target_sid, namespace="/bmc")
+
+    return success()
+
+
+@view_trust_manage.route("/reboot", methods=["POST"])
+@jwt_required()
+def reboot():
+    id = ParamWithId(**request.args).id
+
+    target_sid = None
+    for sid, values in activate_bmc_clients.items():
+        if values["monitor_id"] == id:
+            target_sid = sid
+            break
+
+    socketio.emit("reboot", room=target_sid, namespace="/bmc")
+
     return success()
 
 
@@ -242,7 +280,7 @@ def certify():
     monitor_record: Monitor = Monitor.query.filter(Monitor.id == id).one()
 
     target_sid = None
-    for sid, values in activate_clients.items():
+    for sid, values in activate_host_clients.items():
         if values["monitor_id"] == id:
             target_sid = sid
             break
@@ -295,7 +333,7 @@ def update_base():
     id = ParamWithId(**request.args).id
 
     target_sid = None
-    for sid, values in activate_clients.items():
+    for sid, values in activate_host_clients.items():
         if values["monitor_id"] == id:
             target_sid = sid
             break
