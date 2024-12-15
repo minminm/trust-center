@@ -81,6 +81,21 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     authRoutes.value = Array.from(authRoutesMap.values());
   }
 
+  function updateConstantRoutes(userInfo: any) {
+    const userName = userInfo.userName;
+    const role = userInfo.roles[0];
+    for (let i = 0; i < constantRoutes._value.length; i += 1) {
+      if (constantRoutes._value[i].name === 'document') {
+        for (let j = 0; j < constantRoutes._value[i].children.length; j += 1) {
+          if (constantRoutes._value[i].children[j].name === 'document_ai') {
+            constantRoutes._value[i].children[j].props.url =
+              `http://trustcenterai.nat300.top/?userName=${userName}&role=${role}`;
+          }
+        }
+      }
+    }
+  }
+
   const removeRouteFns: (() => void)[] = [];
 
   /** Global menus */
@@ -334,6 +349,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     resetRouteCache,
     breadcrumbs,
     initConstantRoute,
+    updateConstantRoutes,
     isInitConstantRoute,
     initAuthRoute,
     isInitAuthRoute,

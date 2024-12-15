@@ -56,6 +56,10 @@ export function createRouteGuard(router: Router) {
       return;
     }
 
+    if (isLogin) {
+      useRouteStore().updateConstantRoutes(authStore.userInfo);
+    }
+
     // if the user is logged in but does not have authorization, then switch to the 403 page
     if (!hasAuth) {
       next({ name: noAuthorizationRoute });
