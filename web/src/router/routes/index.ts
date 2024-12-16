@@ -39,7 +39,7 @@ export const myCustomRoutes: CustomRoute[] = [
         path: '/document/ai',
         component: 'view.iframe-page',
         props: {
-          url: 'http://trustcenterai.nat300.top'
+          url: 'http://localhost:8501/'
         },
         meta: {
           title: 'document_ai',

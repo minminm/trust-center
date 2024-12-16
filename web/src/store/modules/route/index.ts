@@ -89,7 +89,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
         for (let j = 0; j < constantRoutes._value[i].children.length; j += 1) {
           if (constantRoutes._value[i].children[j].name === 'document_ai') {
             constantRoutes._value[i].children[j].props.url =
-              `http://trustcenterai.nat300.top/?userName=${userName}&role=${role}`;
+              `http://localhost:8501/?userName=${userName}&role=${role}`;
           }
         }
       }

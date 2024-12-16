@@ -41,3 +41,6 @@ class ParamWithId(BaseModel):
 
 class ParamWithIds(BaseModel):
     ids: list[int]
+
+class ParamWithIp(BaseModel):
+    ip: str
