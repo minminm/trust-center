@@ -3,6 +3,7 @@ import sys
 import threading
 from time import sleep
 import socketio
+import subprocess
 
 # 创建 SocketIO 客户端实例
 sio = socketio.Client()
@@ -38,7 +39,10 @@ def disconnect():
 def on_certify():
     print(f"Received power on command")
 
-    # TODO: 进行上电
+    command = "obmcutil poweron"
+    result = subprocess.run(
+        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
 
 
 # 对 host 进行下电
@@ -46,7 +50,10 @@ def on_certify():
 def on_certify():
     print(f"Received power off command")
 
-    # TODO: 进行下电
+    command = "obmcutil chassisoff"
+    result = subprocess.run(
+        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
 
 
 # 对 host 进行下电
@@ -54,12 +61,27 @@ def on_certify():
 def on_certify():
     print(f"Received reboot command")
 
-    # TODO: 重启 —— 则先下电再上电，操作间隔可以设置为5s?
+    command_off = "obmcutil chassisoff"
+    result = subprocess.run(
+        command_off,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    sleep(5)
+    command_on = "obmcutil poweron"
+    result = subprocess.run(
+        command_on,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
 
 
 def main():
     try:
-        # TODO: 拿到 host 的 identity, 不要再单独生成一个了
 
         headers = {"identity": "xxxaaabbb"}
         sio.connect(f"http://localhost:5000", namespaces=["/host"], headers=headers)
